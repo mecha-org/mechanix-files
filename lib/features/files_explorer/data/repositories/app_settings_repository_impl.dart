@@ -1,0 +1,42 @@
+import 'package:files/features/files_explorer/data/repositories/app_settings_repository.dart';
+import 'package:files/features/files_explorer/data/models/app_settings.dart';
+import 'package:files/core/constants/hive_tables.dart';
+import 'package:hive/hive.dart';
+
+class AppSettingsRepositoryImpl extends AppSettingsRepository {
+  Future<void> ensureAppSettingsConnected() async {
+    if (!Hive.isBoxOpen(HiveTables.appSettingsTable)) {
+      await Hive.openBox<AppSettings>(HiveTables.appSettingsTable);
+    }
+  }
+
+  AppSettings _defaults() => AppSettings(showHiddenFiles: false);
+
+  Box<AppSettings> _box() => Hive.box<AppSettings>(HiveTables.appSettingsTable);
+
+  @override
+  Future<AppSettings> getSettings() async {
+    await ensureAppSettingsConnected();
+
+    final settings = _box().get(0, defaultValue: _defaults())!;
+
+    return settings;
+  }
+
+  Future<void> saveSettings(AppSettings settings) async {
+    await ensureAppSettingsConnected();
+
+    await _box().put(0, settings);
+  }
+
+  @override
+  Future<void> updateShowHidden(bool value) async {
+    final current = await getSettings();
+
+    await saveSettings(current.copyWith(showHiddenFiles: value));
+  }
+
+  Future<void> resetToDefaults() async {
+    await saveSettings(_defaults());
+  }
+}

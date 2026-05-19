@@ -1,0 +1,61 @@
+{
+  "filesHomeTitle" : "Locations",
+  "downloads": "Downloads",
+  "homeDirectory": "Home directory",
+  "home" : "Home",
+  "documents" : "Documents",
+  "recent": "Recent",
+  "hardDriveTitle": "Hard Drive",
+  "root" : "Root ( / )",
+  "fileInfo" : "Info",
+  "rename" : "Rename",
+  "select" : "Select",
+  "newFolder" : "New Folder",
+  "hideFiles" : "Hide hidden files",
+  "showFiles" : "Show hidden files",  
+  "type" : "Type",
+  "size" : "Size",
+  "modified" : "Modified",
+  "accessed" : "Accessed",
+  "changed" : "Changed",
+  "readable" : "Readable",
+  "writable" : "Writable",
+  "hidden" : "Hidden",
+  "emptySearchResultsMessage": "No matching results found",
+  "emptyFolderMessage": "This folder is empty",
+  "selectAll" : "Select all",
+  "copyTo" : "Copy to",
+  "moveTo" : "Move to",
+  "moveToTrash" : "Move to trash",
+  "newFolderWithSingleItem" : "New folder with this item",
+  "paste" : "Paste here",
+  "cancel" : "Cancel",
+  "replace" : "Replace",
+  "skip" : "Skip",
+  "skipAll" : "Skip all",
+  "moveItems": "{count, plural, =1{Move 1 item} other{Move {count} items}}",
+  "@moveItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "copyItems": "{count, plural, =1{Copy 1 item} other{Copy {count} items}}",
+  "@copyItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pasteInNewFolder": "{count, plural, =1{New folder with '1 item'} other{New folder with '{count} items'}}",
+  "@pasteInNewFolder": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+    "trash" : "Trash"
+}
