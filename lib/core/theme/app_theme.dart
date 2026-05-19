@@ -9,6 +9,7 @@ class AppColors {
   static const Color onSurfaceVariant = Color(0xFFADADAD);
   static const Color onSurfaceVariantDark = Color(0xFF636363);
   static const Color backgroundVariant = Color(0xFF212121);
+  static const Color backgroundVariantDark = Color(0xFF151515);
 }
 
 class AppTheme {

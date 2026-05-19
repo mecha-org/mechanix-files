@@ -44,7 +44,6 @@ class ExplorerBreadcrumbs extends StatelessWidget {
       final pathBreadcrumbs = _buildBreadcrumbs(context);
 
       return SizedBox(
-        height: 40,
         width: double.infinity,
         child: ScrollConfiguration(
           behavior: ScrollConfiguration.of(context).copyWith(
@@ -130,13 +129,10 @@ class ExplorerBreadcrumbs extends StatelessWidget {
                         ),
 
                         if (!isLast)
-                          const Padding(
-                            padding: EdgeInsets.only(top: 10),
-                            child: Icon(
-                              Icons.chevron_right,
-                              size: 24,
-                              color: AppColors.onSurfaceVariant,
-                            ),
+                          const Icon(
+                            Icons.chevron_right,
+                            size: 24,
+                            color: AppColors.onSurfaceVariant,
                           ),
                       ],
                     );
@@ -180,7 +176,6 @@ class ExplorerBreadcrumbs extends StatelessWidget {
     final breadcrumbs = _buildBreadcrumbs(context);
 
     return SizedBox(
-      height: 40,
       width: double.infinity,
       child: ScrollConfiguration(
         behavior: ScrollConfiguration.of(context).copyWith(
@@ -237,13 +232,10 @@ class ExplorerBreadcrumbs extends StatelessWidget {
                     ),
                   ),
                   if (!isLast)
-                    const Padding(
-                      padding: EdgeInsets.only(top: 10),
-                      child: Icon(
-                        Icons.chevron_right,
-                        size: 24,
-                        color: AppColors.onSurfaceVariant,
-                      ),
+                    const Icon(
+                      Icons.chevron_right,
+                      size: 24,
+                      color: AppColors.onSurfaceVariant,
                     ),
                 ],
               );

@@ -16,7 +16,7 @@ class BottomBar extends StatelessWidget {
     this.trailing,
     this.height = 20,
     this.padding = const EdgeInsets.symmetric(horizontal: 0),
-    this.backgroundColor = AppColors.backgroundVariant,
+    this.backgroundColor = AppColors.backgroundVariantDark,
   });
 
   Widget _wrap(Widget? child) {
