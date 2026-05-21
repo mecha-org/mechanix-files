@@ -4,7 +4,6 @@ import 'package:file/local.dart';
 import 'package:files/core/utils/app_logger.dart';
 import 'package:files/features/files_explorer/data/models/conflict_resolution_strategy.dart';
 import 'package:files/features/files_explorer/data/repositories/file_repository.dart';
-import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 
 class FileRepositoryImpl implements FileRepository {
@@ -213,7 +212,7 @@ class FileRepositoryImpl implements FileRepository {
           }
         }
       } catch (e, st) {
-        debugPrint("Error while listing ${currentDir.path}: $e\n$st");
+        AppLogger.e("Error while listing ${currentDir.path}: $e\n$st");
       }
     }
     return results;

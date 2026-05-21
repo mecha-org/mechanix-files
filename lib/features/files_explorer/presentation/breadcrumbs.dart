@@ -40,7 +40,10 @@ class ExplorerBreadcrumbs extends StatelessWidget {
     /// ---------------- COPY / MOVE MODE HEADER ----------------
     if (isCopyMode || isMoveMode) {
       final count = isCopyMode ? copiedItemCount : movedItemCount;
-      final label = isCopyMode ? "Copy" : "Move";
+      final label =
+          isCopyMode
+              ? AppLocalizations.of(context)!.copy
+              : AppLocalizations.of(context)!.move;
       final pathBreadcrumbs = _buildBreadcrumbs(context);
 
       return SizedBox(
@@ -59,7 +62,11 @@ class ExplorerBreadcrumbs extends StatelessWidget {
               children: [
                 /// ---------------- STATIC LABEL ----------------
                 Text(
-                  "$label $count item${count == 1 ? '' : 's'}",
+                  count == 1
+                      ? AppLocalizations.of(context)!.copyMoveSingleItem(label)
+                      : AppLocalizations.of(
+                        context,
+                      )!.copyMoveMultipleItems(label, count),
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -149,7 +156,7 @@ class ExplorerBreadcrumbs extends StatelessWidget {
     if (isSelectionMode) {
       if (selectionCount > 0) {
         return Text(
-          "$selectionCount Selected",
+          AppLocalizations.of(context)!.selectedItems(selectionCount),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
@@ -161,9 +168,9 @@ class ExplorerBreadcrumbs extends StatelessWidget {
       }
 
       if (selectionCount == 0 && isCopyMode == false && isMoveMode == false) {
-        return const Text(
-          "No selection",
-          style: TextStyle(
+        return Text(
+          AppLocalizations.of(context)!.noSelection,
+          style: const TextStyle(
             fontSize: 20,
             color: AppColors.onSurfaceVariant,
             fontWeight: FontWeight.w500,

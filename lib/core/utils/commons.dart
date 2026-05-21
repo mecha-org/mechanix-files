@@ -1,15 +1,17 @@
 import 'dart:io' as io;
 import 'dart:math' as math;
 
+import 'package:files/l10n/app_localizations.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as p;
 
-String formatModifiedTime(DateTime modified) {
+String formatModifiedTime(BuildContext context, DateTime modified) {
   final now = DateTime.now();
 
   // If modified just now (within last 30 seconds)
   if (now.difference(modified).inSeconds.abs() < 30) {
-    return "Now";
+    return AppLocalizations.of(context)!.now;
   }
 
   final isSameDay =
@@ -49,8 +51,11 @@ String formatBytesDecimal(int bytes, {int decimals = 1}) {
   return '${size.toStringAsFixed(decimals)} ${suffixes[exponent]}';
 }
 
-Future<String> generateUniqueFolderName(String basePath) async {
-  const String baseName = "New Folder";
+Future<String> generateUniqueFolderName(
+  BuildContext context,
+  String basePath,
+) async {
+  final baseName = AppLocalizations.of(context)!.newFolder;
 
   // First check the default folder name
   String candidate = p.join(basePath, baseName);

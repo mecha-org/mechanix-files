@@ -62,7 +62,9 @@ class PasteHandler {
       CustomNotification.show(
         context: context,
         type: NotificationType.success,
-        message: "Moved $itemName to $folderName",
+        message: AppLocalizations.of(
+          context,
+        )!.movedItemToFolder(itemName, folderName),
       );
 
       return;
@@ -108,8 +110,11 @@ class PasteHandler {
       CustomNotification.show(
         context: context,
         type: NotificationType.success,
-        message:
-            "Moved $movePathCount item${movePathCount > 1 ? 's' : ''} to $folderName",
+        message: AppLocalizations.of(context)!.movedItemsToFolder(
+          movePathCount,
+          movePathCount > 1 ? 's' : '',
+          folderName,
+        ),
       );
 
       return;
@@ -284,9 +289,9 @@ class PasteHandler {
                       },
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'Would you like to replace?',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context)!.replaceQuestion,
+                      style: const TextStyle(
                         color: AppColors.onSurface,
                         fontSize: 20,
                         fontWeight: FontWeight.w400,
@@ -422,9 +427,9 @@ class ConflictResolutionBottomSheet extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Would you like to replace?',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.replaceQuestion,
+                style: const TextStyle(
                   color: AppColors.onSurface,
                   fontSize: 20,
                   fontWeight: FontWeight.w400,

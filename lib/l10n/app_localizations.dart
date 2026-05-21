@@ -256,6 +256,18 @@ abstract class AppLocalizations {
   /// **'Move to'**
   String get moveTo;
 
+  /// No description provided for @copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get copy;
+
+  /// No description provided for @move.
+  ///
+  /// In en, this message translates to:
+  /// **'Move'**
+  String get move;
+
   /// No description provided for @moveToTrash.
   ///
   /// In en, this message translates to:
@@ -381,6 +393,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Files of type \"{fileType}\" are not supported'**
   String unsupportedFileTypeErrorMessageWithType(String fileType);
+
+  /// No description provided for @noSelection.
+  ///
+  /// In en, this message translates to:
+  /// **'No selection'**
+  String get noSelection;
+
+  /// No description provided for @selectedItems.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Selected'**
+  String selectedItems(int count);
+
+  /// No description provided for @copyMoveSingleItem.
+  ///
+  /// In en, this message translates to:
+  /// **'{action} 1 item'**
+  String copyMoveSingleItem(Object action);
+
+  /// No description provided for @copyMoveMultipleItems.
+  ///
+  /// In en, this message translates to:
+  /// **'{action} {count} items'**
+  String copyMoveMultipleItems(Object action, int count);
+
+  /// No description provided for @now.
+  ///
+  /// In en, this message translates to:
+  /// **'Now'**
+  String get now;
+
+  /// No description provided for @errorMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String errorMessage(Object error);
+
+  /// No description provided for @movedItemsToFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Moved {count} item{plural} to {folder}'**
+  String movedItemsToFolder(Object count, Object plural, Object folder);
+
+  /// No description provided for @enterName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter name'**
+  String get enterName;
+
+  /// No description provided for @nameCannotBeEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Name cannot be empty'**
+  String get nameCannotBeEmpty;
+
+  /// No description provided for @renameItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename \'{name}\''**
+  String renameItem(Object name);
+
+  /// No description provided for @movedItemToFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Moved {item} to {folder}'**
+  String movedItemToFolder(Object folder, Object item);
+
+  /// No description provided for @replaceQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Would you like to replace?'**
+  String get replaceQuestion;
+
+  /// No description provided for @searchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search here'**
+  String get searchHint;
 }
 
 class _AppLocalizationsDelegate

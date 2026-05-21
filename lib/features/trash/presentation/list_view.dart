@@ -127,7 +127,7 @@ class TrashListSection extends StatelessWidget {
                         const SizedBox(height: 2),
 
                         Text(
-                          formatModifiedTime(modified),
+                          formatModifiedTime(context, modified),
                           style: const TextStyle(
                             fontSize: 13,
                             color: AppColors.onSurfaceVariant,

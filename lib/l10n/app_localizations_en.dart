@@ -90,6 +90,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get moveTo => 'Move to';
 
   @override
+  String get copy => 'Copy';
+
+  @override
+  String get move => 'Move';
+
+  @override
   String get moveToTrash => 'Move to Trash';
 
   @override
@@ -177,4 +183,57 @@ class AppLocalizationsEn extends AppLocalizations {
   String unsupportedFileTypeErrorMessageWithType(String fileType) {
     return 'Files of type \"$fileType\" are not supported';
   }
+
+  @override
+  String get noSelection => 'No selection';
+
+  @override
+  String selectedItems(int count) {
+    return '$count Selected';
+  }
+
+  @override
+  String copyMoveSingleItem(Object action) {
+    return '$action 1 item';
+  }
+
+  @override
+  String copyMoveMultipleItems(Object action, int count) {
+    return '$action $count items';
+  }
+
+  @override
+  String get now => 'Now';
+
+  @override
+  String errorMessage(Object error) {
+    return 'Error: $error';
+  }
+
+  @override
+  String movedItemsToFolder(Object count, Object plural, Object folder) {
+    return 'Moved $count item$plural to $folder';
+  }
+
+  @override
+  String get enterName => 'Enter name';
+
+  @override
+  String get nameCannotBeEmpty => 'Name cannot be empty';
+
+  @override
+  String renameItem(Object name) {
+    return 'Rename \'$name\'';
+  }
+
+  @override
+  String movedItemToFolder(Object folder, Object item) {
+    return 'Moved $item to $folder';
+  }
+
+  @override
+  String get replaceQuestion => 'Would you like to replace?';
+
+  @override
+  String get searchHint => 'Search here';
 }

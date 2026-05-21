@@ -1,6 +1,7 @@
 import 'package:files/core/constants/icons.dart';
 import 'package:files/core/theme/app_theme.dart';
 import 'package:files/features/files_explorer/presentation/file_explorer.dart';
+import 'package:files/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class SearchOverlayController {
@@ -78,7 +79,7 @@ class SearchOverlayController {
                     },
                     textInputAction: TextInputAction.search,
                     decoration: InputDecoration(
-                      hintText: "Search here",
+                      hintText: AppLocalizations.of(context)!.searchHint,
                       border: InputBorder.none,
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,

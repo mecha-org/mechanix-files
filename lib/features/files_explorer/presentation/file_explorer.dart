@@ -221,7 +221,9 @@ class FileExplorerPageState extends State<FileExplorerPage> {
           listener: (context, state) {
             CustomNotification.show(
               context: context,
-              message: "Error: ${state.error}",
+              message: AppLocalizations.of(
+                context,
+              )!.errorMessage(state.error ?? ''),
               type: NotificationType.error,
             );
           },
@@ -260,8 +262,11 @@ class FileExplorerPageState extends State<FileExplorerPage> {
               CustomNotification.show(
                 context: context,
                 type: NotificationType.success,
-                message:
-                    "Moved $totalMovedCount item${totalMovedCount > 1 ? 's' : ''} to $folderName",
+                message: AppLocalizations.of(context)!.movedItemsToFolder(
+                  totalMovedCount,
+                  totalMovedCount > 1 ? 's' : '',
+                  folderName,
+                ),
               );
 
               context.read<FilesBloc>().add(CancelMoveMode());
@@ -660,7 +665,7 @@ class FileExplorerPageState extends State<FileExplorerPage> {
     final bloc = context.read<FilesBloc>();
     final path = controller.getCurrentPath;
 
-    final folderName = await generateUniqueFolderName(path);
+    final folderName = await generateUniqueFolderName(context, path);
 
     bloc.add(
       CreateFolder(path: path, folderName: folderName, controller: controller),
@@ -712,7 +717,7 @@ class FileExplorerPageState extends State<FileExplorerPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '${AppLocalizations.of(ctx)!.rename} \'$initialName\'',
+                          AppLocalizations.of(ctx)!.renameItem(initialName),
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w300,
@@ -757,9 +762,11 @@ class FileExplorerPageState extends State<FileExplorerPage> {
                       },
                       textInputAction: TextInputAction.done,
                       decoration: InputDecoration(
-                        hintText: "Enter name",
-
-                        errorText: isEmpty ? "Name cannot be empty" : null,
+                        hintText: AppLocalizations.of(ctx)!.enterName,
+                        errorText:
+                            isEmpty
+                                ? AppLocalizations.of(ctx)!.nameCannotBeEmpty
+                                : null,
                         border: InputBorder.none,
                         enabledBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,

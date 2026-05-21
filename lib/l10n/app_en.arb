@@ -26,6 +26,8 @@
   "selectAll" : "Select all",
   "copyTo" : "Copy to",
   "moveTo" : "Move to",
+  "copy" : "Copy",
+  "move" : "Move",
   "moveToTrash" : "Move to trash",
   "newFolderWithSingleItem" : "New folder with this item",
   "paste" : "Paste here",
@@ -75,5 +77,55 @@
         "type": "String"
       }
     }
-  }
+  },
+   "noSelection": "No selection",
+  "selectedItems": "{count} Selected",
+  "@selectedItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "copyMoveSingleItem": "{action} 1 item",
+  "@copyMoveSingleItem": {
+    "placeholders": {
+      "action": {}
+    }
+  },
+  "copyMoveMultipleItems": "{action} {count} items",
+  "@copyMoveMultipleItems": {
+    "placeholders": {
+      "action": {},
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "now": "Now",
+  "errorMessage": "Error: {error}",
+  "@errorMessage": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "movedItemsToFolder": "Moved {count} item{plural} to {folder}",
+  "@movedItemsToFolder": {
+    "placeholders": {
+      "count": {},
+      "plural": {},
+      "folder": {}
+    }
+  },
+  "enterName": "Enter name",
+  "nameCannotBeEmpty": "Name cannot be empty",
+  "renameItem": "Rename '{name}'",
+  "@renameItem": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "movedItemToFolder": "Moved {item} to {folder}",
+  "replaceQuestion": "Would you like to replace?",
+  "searchHint": "Search here"
 }
