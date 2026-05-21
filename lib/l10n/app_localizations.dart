@@ -259,7 +259,7 @@ abstract class AppLocalizations {
   /// No description provided for @moveToTrash.
   ///
   /// In en, this message translates to:
-  /// **'Move to trash'**
+  /// **'Move to Trash'**
   String get moveToTrash;
 
   /// No description provided for @newFolderWithSingleItem.
@@ -327,6 +327,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Trash'**
   String get trash;
+
+  /// No description provided for @moveItemToTrashConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Move this item to Trash?'**
+  String get moveItemToTrashConfirmation;
+
+  /// No description provided for @moveItemsToTrashConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Move selected items to Trash?'**
+  String get moveItemsToTrashConfirmation;
 
   /// No description provided for @enterPdfPassword.
   ///

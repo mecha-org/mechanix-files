@@ -1,12 +1,22 @@
+import 'package:files/core/utils/app_logger.dart';
 import 'package:files/features/files_explorer/data/repositories/app_settings_repository.dart';
 import 'package:files/features/files_explorer/data/models/app_settings.dart';
 import 'package:files/core/constants/hive_tables.dart';
+import 'package:files/features/files_explorer/services/hive_service.dart';
 import 'package:hive/hive.dart';
 
 class AppSettingsRepositoryImpl extends AppSettingsRepository {
-  Future<void> ensureAppSettingsConnected() async {
-    if (!Hive.isBoxOpen(HiveTables.appSettingsTable)) {
-      await Hive.openBox<AppSettings>(HiveTables.appSettingsTable);
+  Box<AppSettings> get box =>
+      Hive.box<AppSettings>(HiveTables.appSettingsTable);
+
+  Future<void> ensureHiveConnected() async {
+    try {
+      if (!Hive.isBoxOpen(HiveTables.appSettingsTable)) {
+        await HiveService.initializeHive();
+        await Hive.openBox<AppSettings>(HiveTables.appSettingsTable);
+      }
+    } catch (e) {
+      AppLogger.e('Failed to open Hive box: $e');
     }
   }
 
@@ -16,7 +26,7 @@ class AppSettingsRepositoryImpl extends AppSettingsRepository {
 
   @override
   Future<AppSettings> getSettings() async {
-    await ensureAppSettingsConnected();
+    await ensureHiveConnected();
 
     final settings = _box().get(0, defaultValue: _defaults())!;
 
@@ -24,7 +34,7 @@ class AppSettingsRepositoryImpl extends AppSettingsRepository {
   }
 
   Future<void> saveSettings(AppSettings settings) async {
-    await ensureAppSettingsConnected();
+    await ensureHiveConnected();
 
     await _box().put(0, settings);
   }

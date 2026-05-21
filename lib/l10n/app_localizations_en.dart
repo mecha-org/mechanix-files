@@ -90,7 +90,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get moveTo => 'Move to';
 
   @override
-  String get moveToTrash => 'Move to trash';
+  String get moveToTrash => 'Move to Trash';
 
   @override
   String get newFolderWithSingleItem => 'New folder with this item';
@@ -148,6 +148,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get trash => 'Trash';
+
+  @override
+  String get moveItemToTrashConfirmation => 'Move this item to Trash?';
+
+  @override
+  String get moveItemsToTrashConfirmation => 'Move selected items to Trash?';
 
   @override
   String get enterPdfPassword => 'Enter PDF password';

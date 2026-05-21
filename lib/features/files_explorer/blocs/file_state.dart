@@ -26,12 +26,15 @@ class FilesState extends Equatable {
     this.loading = false,
     this.fileSystemList = const [],
     this.error,
+
     this.isCopyMode = false,
     this.copiedPaths = const [],
     this.conflictingPaths = const [],
     required this.conflictDestinationPath,
+
     this.isMoveMode = false,
     this.movedPaths = const [],
+
     this.currentSortBy = '',
     this.isAscending = false,
     this.fileDetails,
@@ -44,12 +47,15 @@ class FilesState extends Equatable {
     bool? loading,
     List<FileSystemEntity>? fileSystemList,
     String? error,
+
     bool? isCopyMode,
     List<String>? copiedPaths,
     List<String>? conflictingPaths,
     String? conflictDestinationPath,
+
     bool? isMoveMode,
     List<String>? movedPaths,
+
     String? currentSortBy,
     bool? isAscending,
     FileStat? fileDetails,
@@ -92,5 +98,7 @@ class FilesState extends Equatable {
     conflictDestinationPath,
     currentPage,
     hasMorePages,
+    isAscending,
+    showHiddenFiles,
   ];
 }

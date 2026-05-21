@@ -13,6 +13,7 @@ import 'package:files/features/files_explorer/controllers/file_manager_controlle
 import 'package:files/features/files_explorer/data/models/conflict_resolution_strategy.dart';
 import 'package:files/features/files_explorer/presentation/bottom_bar_widgets.dart';
 import 'package:files/features/files_explorer/presentation/breadcrumbs.dart';
+import 'package:files/features/files_explorer/presentation/trash_confirmation_dialog.dart';
 import 'package:files/features/files_explorer/presentation/list_view.dart';
 import 'package:files/features/files_explorer/presentation/paste_handler.dart';
 import 'package:files/features/files_explorer/presentation/search_dialog.dart';
@@ -824,18 +825,22 @@ class FileExplorerPageState extends State<FileExplorerPage> {
     context.read<FilesBloc>().add(ToggleHiddenFiles());
   }
 
-  void handleMoveToTrash() async {
+  Future<void> handleMoveToTrash() async {
     final paths = selectedPathsNotifier.value.toList();
+
     if (paths.isEmpty) return;
 
-    final completer = Completer<void>();
+    final confirmed = await showMoveToTrashConfirmationSheet(
+      context: context,
+      itemCount: paths.length,
+    );
 
+    if (confirmed != true) return;
+    final completer = Completer<void>();
     context.read<TrashBloc>().add(MoveToTrash(paths, completer: completer));
 
     clearSelection();
-
     await completer.future;
-
     await controller.reload();
   }
 }

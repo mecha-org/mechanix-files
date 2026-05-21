@@ -10,21 +10,27 @@ class TrashRepositoryImpl implements TrashRepository {
 
   TrashRepositoryImpl({FileSystem? fs}) : _fs = fs ?? const LocalFileSystem();
 
+  Future<void> _ensureTrashInitialized() async {
+    await TrashPathsService.init();
+  }
+
   @override
   Future<void> moveToTrash(List<String> paths) async {
+    await _ensureTrashInitialized();
+
     final result = await Process.run('gio', ['trash', ...paths]);
 
     if (result.exitCode != 0) {
-      // fallback to per-file handling
       for (final path in paths) {
         await Process.run('gio', ['trash', path]);
       }
     }
-    return;
   }
 
   @override
   Future<List<FileSystemEntity>> getTrashItems() async {
+    await _ensureTrashInitialized();
+
     final entities =
         _fs.directory(TrashPathsService.trashFilesDir.path).listSync().toList();
 

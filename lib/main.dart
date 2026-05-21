@@ -4,28 +4,29 @@ import 'package:files/core/constants/app_routes.dart';
 import 'package:files/core/theme/app_theme.dart';
 import 'package:files/features/files_explorer/blocs/file_boc.dart';
 import 'package:files/features/files_explorer/blocs/file_event.dart';
+import 'package:files/features/files_explorer/data/models/app_settings.dart';
 import 'package:files/features/files_explorer/data/repositories/app_settings_repository.dart';
 import 'package:files/features/files_explorer/data/repositories/app_settings_repository_impl.dart';
 import 'package:files/features/files_explorer/data/repositories/file_repository.dart';
 import 'package:files/features/files_explorer/data/repositories/file_repository_impl.dart';
-import 'package:files/features/files_explorer/services/hive_service.dart';
 import 'package:files/features/files_home/presentation/files_home.dart';
 import 'package:files/features/recents/blocs/recent_file_event.dart';
 import 'package:files/features/recents/blocs/recent_files_bloc.dart';
+import 'package:files/features/recents/data/models/recent_files.dart';
 import 'package:files/features/recents/data/repositories/recent_files_repository.dart';
 import 'package:files/features/recents/data/repositories/recent_files_repository_impl.dart';
 import 'package:files/features/trash/bloc/trash_bloc.dart';
 import 'package:files/features/trash/data/repositories/trash_repository.dart';
 import 'package:files/features/trash/data/repositories/trash_repository_impl.dart';
-import 'package:files/features/trash/services/trash_path_service.dart';
 import 'package:files/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 
-Future<void> main() async {
+void main() {
   final openPath = _parseOpenPath();
-  await HiveService.init();
-  await TrashPathsService.init();
+  Hive.registerAdapter(AppSettingsAdapter());
+  Hive.registerAdapter(RecentFileAdapter());
 
   runApp(
     MultiRepositoryProvider(
@@ -68,14 +69,14 @@ Future<void> main() async {
           ),
         ],
 
-        child: MainApp(openPath: openPath),
+        child: FilesApp(openPath: openPath),
       ),
     ),
   );
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key, required this.openPath});
+class FilesApp extends StatelessWidget {
+  const FilesApp({super.key, required this.openPath});
   final String openPath;
 
   @override

@@ -59,6 +59,9 @@
     }
   },
   "trash" : "Trash",
+  "moveToTrash": "Move to Trash",
+  "moveItemToTrashConfirmation": "Move this item to Trash?",
+  "moveItemsToTrashConfirmation": "Move selected items to Trash?",
   "enterPdfPassword" : "Enter PDF password",
   "enterPassword" : "Enter password",
   "passwordError" : "Password can not be empty",

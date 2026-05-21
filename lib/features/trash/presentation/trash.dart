@@ -25,7 +25,8 @@ class TrashPageState extends State<TrashPage> {
   final FileManagerController controller = FileManagerController();
   final ValueNotifier<String?> infoPathNotifier = ValueNotifier(null);
   final ScrollController scrollController = ScrollController();
-  String currentPath = TrashPathsService.trashFilesDir.path;
+
+  String currentPath = '';
 
   @override
   void initState() {
@@ -35,7 +36,11 @@ class TrashPageState extends State<TrashPage> {
     _setupListeners();
   }
 
-  void _init() {
+  Future<void> _init() async {
+    await TrashPathsService.init();
+
+    currentPath = TrashPathsService.trashFilesDir.path;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadTrashDirectory();
     });
@@ -47,6 +52,8 @@ class TrashPageState extends State<TrashPage> {
     );
 
     if (!mounted) return;
+
+    setState(() {});
   }
 
   void _setupListeners() {

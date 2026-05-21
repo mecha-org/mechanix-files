@@ -19,11 +19,10 @@ class TrashState extends Equatable {
     String? error,
     List<FileSystemEntity>? trashItems,
     bool? operationSuccess,
-    bool clearError = false,
   }) {
     return TrashState(
       loading: loading ?? this.loading,
-      error: clearError ? null : (error ?? this.error),
+      error: error ?? this.error,
       trashItems: trashItems ?? this.trashItems,
       operationSuccess: operationSuccess ?? this.operationSuccess,
     );
