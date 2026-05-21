@@ -111,6 +111,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get skipAll => 'Skip all';
 
   @override
+  String get cannotMoveFileOverItself => 'You cannot move a file over itself';
+
+  @override
   String moveItems(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

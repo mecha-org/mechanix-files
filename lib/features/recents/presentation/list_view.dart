@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:files/core/theme/app_theme.dart';
 import 'package:files/features/files_home/data/models/file_item.dart';
@@ -35,34 +36,43 @@ class RecentFilesList extends StatelessWidget {
           return MapEntry(fullPath, fileItem);
         }).toList();
 
-    return ListView.builder(
-      controller: scrollController,
-      itemExtent: 72,
-      itemCount: files.length,
-      itemBuilder: (context, index) {
-        final entity = files[index];
-        final fullPath = entity.key;
-        final file = entity.value;
+    return ScrollConfiguration(
+      behavior: ScrollConfiguration.of(context).copyWith(
+        dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse},
+      ),
+      child: ListView.builder(
+        controller: scrollController,
+        itemExtent: 72,
+        itemCount: files.length,
+        itemBuilder: (context, index) {
+          final entity = files[index];
+          final fullPath = entity.key;
+          final file = entity.value;
 
-        return ListTile(
-          leading: Image.asset(
-            file.iconPath,
-            height: 24,
-            width: 24,
-            color: AppColors.onSurface,
-          ),
+          return ListTile(
+            leading: Image.asset(
+              file.iconPath,
+              height: 24,
+              width: 24,
+              color: AppColors.onSurface,
+            ),
 
-          title: Text(file.name, maxLines: 1, overflow: TextOverflow.ellipsis),
+            title: Text(
+              file.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
 
-          subtitle: Text(
-            fullPath,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
+            subtitle: Text(
+              fullPath,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
 
-          onTap: () => onTap(fullPath),
-        );
-      },
+            onTap: () => onTap(fullPath),
+          );
+        },
+      ),
     );
   }
 }

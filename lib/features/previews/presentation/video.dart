@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:files/core/theme/app_theme.dart';
 import 'package:files/features/files_explorer/presentation/file_explorer.dart';
 import 'package:files/features/previews/presentation/preview_action_bar.dart';
+import 'package:files/features/previews/presentation/time_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -75,25 +76,8 @@ class _VideoPreviewState extends State<VideoPreview> {
     super.dispose();
   }
 
-  Widget _buildTimeBubble() {
-    final position = controller.value.position;
-    final duration = controller.value.duration;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundVariant.withOpacity(0.6),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Text(
-        "${_formatHMS(position)} / ${_formatHMS(duration)}",
-        style: const TextStyle(color: AppColors.onSurfaceVariant, fontSize: 16),
-      ),
-    );
-  }
-
   /// Format duration into HH:MM:SS or MM:SS
-  String _formatHMS(Duration d) {
+  String _format(Duration d) {
     final h = d.inHours;
     final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
     final s = d.inSeconds.remainder(60).toString().padLeft(2, '0');
@@ -328,7 +312,11 @@ class _VideoPreviewState extends State<VideoPreview> {
                   top: -36,
                   left: 0,
                   right: 0,
-                  child: Center(child: _buildTimeBubble()),
+                  child: Center(
+                    child: TimeBubble(
+                      text: "${_format(position)} / ${_format(duration)}",
+                    ),
+                  ),
                 ),
               ],
             ),

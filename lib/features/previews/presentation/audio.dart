@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:files/features/previews/presentation/preview_action_bar.dart';
+import 'package:files/features/previews/presentation/time_bubble.dart';
 import 'package:flutter/material.dart';
 
 import 'package:files/core/constants/icons.dart';
@@ -75,20 +76,6 @@ class _AudioPreviewState extends State<AudioPreview> {
     final m = two(d.inMinutes.remainder(60));
     final s = two(d.inSeconds.remainder(60));
     return "$m:$s";
-  }
-
-  Widget _buildTimeBubble() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundVariant.withOpacity(0.6),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Text(
-        "${_format(_position)} / ${_format(_duration)}",
-        style: const TextStyle(color: AppColors.onSurfaceVariant, fontSize: 14),
-      ),
-    );
   }
 
   @override
@@ -250,7 +237,11 @@ class _AudioPreviewState extends State<AudioPreview> {
                   top: -36,
                   left: 0,
                   right: 0,
-                  child: Center(child: _buildTimeBubble()),
+                  child: Center(
+                    child: TimeBubble(
+                      text: "${_format(_position)} / ${_format(_duration)}",
+                    ),
+                  ),
                 ),
               ],
             ),

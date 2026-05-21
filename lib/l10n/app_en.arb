@@ -33,6 +33,7 @@
   "replace" : "Replace",
   "skip" : "Skip",
   "skipAll" : "Skip all",
+  "cannotMoveFileOverItself": "You cannot move a file over itself",
   "moveItems": "{count, plural, =1{Move 1 item} other{Move {count} items}}",
   "@moveItems": {
     "placeholders": {

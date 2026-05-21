@@ -113,52 +113,44 @@ class FileDetailsDialog extends StatelessWidget {
                       ],
                     ),
 
-                    buildDetailRow(
-                      context,
-                      AppLocalizations.of(context)!.type,
-                      details.type.toString(),
+                    DetailRow(
+                      title: AppLocalizations.of(context)!.type,
+                      value: details.type.toString(),
                     ),
 
-                    buildDetailRow(
-                      context,
-                      AppLocalizations.of(context)!.size,
-                      formatBytesDecimal(details.size),
+                    DetailRow(
+                      title: AppLocalizations.of(context)!.size,
+                      value: formatBytesDecimal(details.size),
                     ),
 
-                    buildDetailRow(
-                      context,
-                      AppLocalizations.of(context)!.modified,
-                      formatDateTime(details.modified),
+                    DetailRow(
+                      title: AppLocalizations.of(context)!.modified,
+                      value: formatDateTime(details.modified),
                     ),
 
-                    buildDetailRow(
-                      context,
-                      AppLocalizations.of(context)!.accessed,
-                      formatDateTime(details.accessed),
+                    DetailRow(
+                      title: AppLocalizations.of(context)!.accessed,
+                      value: formatDateTime(details.accessed),
                     ),
 
-                    buildDetailRow(
-                      context,
-                      AppLocalizations.of(context)!.changed,
-                      formatDateTime(details.changed),
+                    DetailRow(
+                      title: AppLocalizations.of(context)!.changed,
+                      value: formatDateTime(details.changed),
                     ),
 
-                    buildDetailRow(
-                      context,
-                      AppLocalizations.of(context)!.readable,
-                      readable,
+                    DetailRow(
+                      title: AppLocalizations.of(context)!.readable,
+                      value: readable,
                     ),
 
-                    buildDetailRow(
-                      context,
-                      AppLocalizations.of(context)!.writable,
-                      writable,
+                    DetailRow(
+                      title: AppLocalizations.of(context)!.writable,
+                      value: writable,
                     ),
 
-                    buildDetailRow(
-                      context,
-                      AppLocalizations.of(context)!.hidden,
-                      hidden,
+                    DetailRow(
+                      title: AppLocalizations.of(context)!.hidden,
+                      value: hidden,
                     ),
                   ],
                 ),
@@ -171,14 +163,20 @@ class FileDetailsDialog extends StatelessWidget {
   }
 }
 
-Widget buildDetailRow(BuildContext context, String title, String value) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          child: Text(
+class DetailRow extends StatelessWidget {
+  final String title;
+  final String value;
+
+  const DetailRow({super.key, required this.title, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
             title,
             style: const TextStyle(
               color: AppColors.onSurfaceVariant,
@@ -186,20 +184,22 @@ Widget buildDetailRow(BuildContext context, String title, String value) {
               fontWeight: FontWeight.w400,
             ),
           ),
-        ),
 
-        Expanded(
-          child: Text(
-            value,
-            textAlign: TextAlign.right,
-            style: const TextStyle(
-              color: AppColors.onSurface,
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
+          const SizedBox(width: 16),
+
+          Expanded(
+            child: Text(
+              value,
+              textAlign: TextAlign.right,
+              style: const TextStyle(
+                color: AppColors.onSurface,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 }

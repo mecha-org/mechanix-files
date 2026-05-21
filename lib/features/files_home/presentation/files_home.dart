@@ -234,7 +234,7 @@ class FileHomePageState extends State<FileHomePage> {
 
           bottomNavigationBar:
               isPickingDestination
-                  ? buildPasteDestinationBottomBar(
+                  ? PasteDestinationBottomBar(
                     onBack: () => Navigator.pop(context),
                     onMenu: () {
                       showModalBottomSheet(
@@ -249,7 +249,7 @@ class FileHomePageState extends State<FileHomePage> {
                       );
                     },
                   )
-                  : buildNormalBottomBar(context),
+                  : const NormalBottomBar(),
         );
       },
     );

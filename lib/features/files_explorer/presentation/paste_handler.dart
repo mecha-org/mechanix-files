@@ -156,9 +156,7 @@ class PasteHandler {
       backgroundColor: Colors.transparent,
       builder: (sheetContext) {
         return Container(
-          decoration: const BoxDecoration(
-            color: AppColors.onSurfaceVariantDark,
-          ),
+          decoration: const BoxDecoration(color: AppColors.backgroundVariant),
           padding: const EdgeInsets.only(
             left: 16,
             right: 16,
@@ -171,7 +169,7 @@ class PasteHandler {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("You cannot move a file over itself"),
+                Text(AppLocalizations.of(context)!.cannotMoveFileOverItself),
 
                 const SizedBox(height: 16),
 

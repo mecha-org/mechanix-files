@@ -28,17 +28,20 @@ class SectionList extends StatelessWidget {
 
         /// Items
         Column(
-          children: List.generate(items.length, (index) {
-            final item = items[index];
-
-            return Column(children: [_buildItem(context, item)]);
-          }),
+          children: items.map((item) => SectionListItem(item: item)).toList(),
         ),
       ],
     );
   }
+}
 
-  Widget _buildItem(BuildContext context, SectionItem item) {
+class SectionListItem extends StatelessWidget {
+  final SectionItem item;
+
+  const SectionListItem({super.key, required this.item});
+
+  @override
+  Widget build(BuildContext context) {
     return InkWell(
       onTap: item.disabled ? null : item.onTap,
       child: Padding(

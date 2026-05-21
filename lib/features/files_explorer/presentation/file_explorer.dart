@@ -397,7 +397,7 @@ class FileExplorerPageState extends State<FileExplorerPage> {
                   builder: (context, infoPath, _) {
                     return AnimatedSwitcher(
                       duration: const Duration(milliseconds: 200),
-                      child: buildBottomPanel(
+                      child: BottomPanel(
                         activePanel: activePanel,
                         controller: controller,
                         state: this,
@@ -417,9 +417,9 @@ class FileExplorerPageState extends State<FileExplorerPage> {
                     filesState.isCopyMode || filesState.isMoveMode;
 
                 if (isDestinationMode) {
-                  return buildPasteDestinationBottomBar(
-                    context,
-                    filesState.isCopyMode,
+                  return PasteDestinationBottomBar(
+                    rootContext: context,
+                    isCopyMode: filesState.isCopyMode,
                   );
                 }
 
@@ -427,8 +427,8 @@ class FileExplorerPageState extends State<FileExplorerPage> {
                   valueListenable: selectionModeNotifier,
                   builder: (_, selecting, __) {
                     return selecting
-                        ? buildSelectionBottomBar(context)
-                        : buildNormalBottomBar(context);
+                        ? SelectionBottomBar(rootContext: context)
+                        : NormalBottomBar(rootContext: context);
                   },
                 );
               },

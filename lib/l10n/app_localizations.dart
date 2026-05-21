@@ -298,6 +298,12 @@ abstract class AppLocalizations {
   /// **'Skip all'**
   String get skipAll;
 
+  /// No description provided for @cannotMoveFileOverItself.
+  ///
+  /// In en, this message translates to:
+  /// **'You cannot move a file over itself'**
+  String get cannotMoveFileOverItself;
+
   /// No description provided for @moveItems.
   ///
   /// In en, this message translates to:
