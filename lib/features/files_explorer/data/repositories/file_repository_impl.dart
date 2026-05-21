@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:file/file.dart';
 import 'package:file/local.dart';
 import 'package:files/core/utils/app_logger.dart';
-import 'package:files/features/files_explorer/blocs/file_event.dart';
+import 'package:files/features/files_explorer/data/models/conflict_resolution_strategy.dart';
 import 'package:files/features/files_explorer/data/repositories/file_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;

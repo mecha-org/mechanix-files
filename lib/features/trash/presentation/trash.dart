@@ -31,21 +31,35 @@ class TrashPageState extends State<TrashPage> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await controller.openDirectory(
-        Directory(TrashPathsService.trashFilesDir.path),
-      );
+    _init();
+    _setupListeners();
+  }
+
+  void _init() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadTrashDirectory();
     });
+  }
 
-    controller.getPathNotifier.addListener(() {
-      if (!mounted) return;
+  Future<void> _loadTrashDirectory() async {
+    await controller.openDirectory(
+      Directory(TrashPathsService.trashFilesDir.path),
+    );
 
-      setState(() {
-        currentPath = controller.getPathNotifier.value;
-      });
-    });
+    if (!mounted) return;
+  }
 
+  void _setupListeners() {
+    controller.getPathNotifier.addListener(_onPathChanged);
     scrollController.addListener(_onScroll);
+  }
+
+  void _onPathChanged() {
+    if (!mounted) return;
+
+    setState(() {
+      currentPath = controller.getPathNotifier.value;
+    });
   }
 
   void _onScroll() {

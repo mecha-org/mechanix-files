@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:files/features/files_explorer/blocs/file_event.dart';
 import 'package:files/features/files_explorer/blocs/file_state.dart';
+import 'package:files/features/files_explorer/data/models/conflict_resolution_strategy.dart';
 import 'package:files/features/files_explorer/data/repositories/app_settings_repository.dart';
 import 'package:files/features/files_explorer/data/repositories/file_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -323,10 +324,15 @@ class FilesBloc extends Bloc<FilesEvent, FilesState> {
     ToggleHiddenFiles event,
     Emitter<FilesState> emit,
   ) async {
-    final newShowHidden = !state.showHiddenFiles;
-    emit(state.copyWith(showHiddenFiles: newShowHidden, loading: true));
-    await appSettingsRepository.updateShowHidden(newShowHidden);
+    emit(state.copyWith(loading: true));
+    try {
+      final newShowHidden = !state.showHiddenFiles;
+      emit(state.copyWith(showHiddenFiles: newShowHidden, loading: true));
+      await appSettingsRepository.updateShowHidden(newShowHidden);
 
-    emit(state.copyWith(loading: false));
+      emit(state.copyWith(loading: false));
+    } catch (e) {
+      emit(state.copyWith(error: e.toString(), loading: false));
+    }
   }
 }

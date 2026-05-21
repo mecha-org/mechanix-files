@@ -10,6 +10,7 @@ import 'package:files/features/files_explorer/blocs/file_boc.dart';
 import 'package:files/features/files_explorer/blocs/file_event.dart';
 import 'package:files/features/files_explorer/blocs/file_state.dart';
 import 'package:files/features/files_explorer/controllers/file_manager_controller.dart';
+import 'package:files/features/files_explorer/data/models/conflict_resolution_strategy.dart';
 import 'package:files/features/files_explorer/presentation/bottom_bar_widgets.dart';
 import 'package:files/features/files_explorer/presentation/breadcrumbs.dart';
 import 'package:files/features/files_explorer/presentation/list_view.dart';
@@ -81,47 +82,50 @@ class FileExplorerPageState extends State<FileExplorerPage> {
 
     _scrollController.addListener(_onScroll);
 
-    // Default to home directory if no startPath is provided
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (!mounted) return;
-
-      controller.syncSettings(
-        showHidden: context.read<FilesBloc>().state.showHiddenFiles,
-      );
-
-      // Start from home
-      await controller.openDirectory(Directory(homeDir));
-      if (!mounted) return;
-
-      final initialPath = widget.startPath;
-      if (initialPath == null) return;
-
-      final type = io.FileSystemEntity.typeSync(initialPath);
-
-      if (type == FileSystemEntityType.file) {
-        final file = File(initialPath);
-
-        // Navigate into parent AFTER home exists
-        await controller.openDirectory(file.parent);
-        if (!mounted) return;
-
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (!mounted) return;
-          // Handle file tap
-        });
-      } else {
-        await controller.openDirectory(Directory(initialPath));
-      }
-    });
-
     controller.getPathNotifier.addListener(() {
-      final newPath = controller.getPathNotifier.value;
       setState(() {
-        currentPath = newPath;
+        currentPath = controller.getPathNotifier.value;
       });
     });
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeExplorer();
+    });
+
     _openKeyboardAfterLoad();
+  }
+
+  Future<void> _initializeExplorer() async {
+    if (!mounted) return;
+
+    controller.syncSettings(
+      showHidden: context.read<FilesBloc>().state.showHiddenFiles,
+    );
+
+    // 1. Always start from home first
+    await controller.openDirectory(Directory(homeDir));
+    if (!mounted) return;
+
+    final initialPath = widget.startPath;
+    if (initialPath == null) return;
+
+    final type = io.FileSystemEntity.typeSync(initialPath);
+
+    if (type == FileSystemEntityType.file) {
+      final file = File(initialPath);
+
+      // 2. Open parent directory
+      await controller.openDirectory(file.parent);
+      if (!mounted) return;
+
+      // 3. Handle file selection after UI stabilizes
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        // handle file tap here
+      });
+    } else {
+      await controller.openDirectory(Directory(initialPath));
+    }
   }
 
   void _openKeyboardAfterLoad() {

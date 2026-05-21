@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:files/features/files_explorer/controllers/file_manager_controller.dart';
+import 'package:files/features/files_explorer/data/models/conflict_resolution_strategy.dart';
 
 abstract class FilesEvent extends Equatable {
   @override
@@ -47,8 +48,6 @@ class Copy extends FilesEvent {
     this.completer,
   });
 }
-
-enum ConflictResolutionStrategy { replace, skip }
 
 class ContinueCopyWithConflictResolution extends FilesEvent {
   final List<String> sourcePaths;

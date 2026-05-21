@@ -35,21 +35,26 @@ class FileHomePageState extends State<FileHomePage> {
   @override
   void initState() {
     super.initState();
+    _handleAutoNavigation();
+  }
 
-    if (widget.path.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder:
-                (_) => FileExplorerPage(
-                  startPath: "/${widget.path.map((e) => e.name).join("/")}",
-                  path: widget.path,
-                ),
-          ),
-        );
-      });
-    }
+  void _handleAutoNavigation() {
+    if (widget.path.isEmpty) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder:
+              (_) => FileExplorerPage(
+                startPath: "/${widget.path.map((e) => e.name).join("/")}",
+                path: widget.path,
+              ),
+        ),
+      );
+    });
   }
 
   @override

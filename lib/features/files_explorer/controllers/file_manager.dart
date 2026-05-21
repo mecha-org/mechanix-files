@@ -209,15 +209,23 @@ class _FileManagerState extends State<FileManager> {
   @override
   void initState() {
     super.initState();
+    _initDirectory();
+  }
+
+  Future<void> _initDirectory() async {
     if (widget.controller.getCurrentPath.isNotEmpty) {
-      currentDir = Future.value([widget.controller.getCurrentDirectory]);
-    } else {
-      currentDir = Future(() async {
-        final list = await FileManager.getStorageList();
-        widget.controller.setCurrentPath = list.first.path;
-        return [widget.controller.getCurrentDirectory];
+      setState(() {
+        currentDir = Future.value([widget.controller.getCurrentDirectory]);
       });
+      return;
     }
+
+    final list = await FileManager.getStorageList();
+    if (!mounted) return;
+    widget.controller.setCurrentPath = list.first.path;
+    setState(() {
+      currentDir = Future.value([widget.controller.getCurrentDirectory]);
+    });
   }
 
   Future<List<FileSystemEntity>> entityList(String path, SortBy sortBy) async {

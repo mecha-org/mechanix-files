@@ -1,0 +1,1 @@
+enum ConflictResolutionStrategy { replace, skip }

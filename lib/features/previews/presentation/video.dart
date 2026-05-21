@@ -43,25 +43,28 @@ class _VideoPreviewState extends State<VideoPreview> {
   void initState() {
     super.initState();
 
-    /// Initialize video controller
-    controller =
-        VideoPlayerController.file(File(widget.filePath))
-          ..initialize().then((_) {
-            /// Prevent setState after dispose
-            if (!mounted) return;
+    _initVideo();
+  }
 
-            setState(() {});
-          })
-          ..setLooping(false);
+  Future<void> _initVideo() async {
+    controller = VideoPlayerController.file(File(widget.filePath))
+      ..setLooping(false);
 
-    _videoListener = () {
-      if (!mounted || _isDisposed) return;
-      if (!controller.value.isInitialized) return;
+    await controller.initialize();
 
-      setState(() {});
-    };
+    if (!mounted) return;
 
+    setState(() {});
+
+    _videoListener = _onVideoUpdate;
     controller.addListener(_videoListener);
+  }
+
+  void _onVideoUpdate() {
+    if (!mounted || _isDisposed) return;
+    if (!controller.value.isInitialized) return;
+
+    setState(() {});
   }
 
   @override

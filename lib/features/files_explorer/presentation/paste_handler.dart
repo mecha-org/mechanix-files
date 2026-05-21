@@ -9,6 +9,7 @@ import 'package:files/features/files_explorer/blocs/file_boc.dart';
 import 'package:files/features/files_explorer/blocs/file_event.dart';
 import 'package:files/features/files_explorer/blocs/file_state.dart';
 import 'package:files/features/files_explorer/controllers/file_manager_controller.dart';
+import 'package:files/features/files_explorer/data/models/conflict_resolution_strategy.dart';
 import 'package:files/features/files_explorer/presentation/commons.dart';
 import 'package:files/features/files_explorer/presentation/file_explorer.dart';
 import 'package:files/l10n/app_localizations.dart';
