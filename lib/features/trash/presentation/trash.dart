@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:files/core/theme/app_theme.dart';
 import 'package:files/core/constants/icons.dart';
 import 'package:files/core/widgets/bottom_bar/bottom_bar.dart';
+import 'package:files/core/widgets/custom_icon_button.dart';
 import 'package:files/core/widgets/notification/custom_notification.dart';
 import 'package:files/features/files_explorer/blocs/file_boc.dart';
 import 'package:files/features/files_explorer/blocs/file_state.dart';
@@ -138,15 +139,9 @@ class TrashPageState extends State<TrashPage> {
         ),
 
         bottomNavigationBar: BottomBar(
-          leading: IconButton(
-            constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+          leading: CustomIconButton.asset(
+            assetPath: FileIcons.back,
             onPressed: handleBack,
-            icon: Image.asset(
-              FileIcons.back,
-              width: 24,
-              height: 24,
-              color: AppColors.onSurface,
-            ),
           ),
         ),
       ),

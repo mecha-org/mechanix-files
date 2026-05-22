@@ -1,5 +1,6 @@
 import 'package:files/core/constants/icons.dart';
 import 'package:files/core/theme/app_theme.dart';
+import 'package:files/core/widgets/custom_icon_button.dart';
 import 'package:files/features/files_explorer/presentation/file_explorer.dart';
 import 'package:files/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -47,19 +48,13 @@ class SearchOverlayController {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      IconButton(
-                        icon: Image.asset(
-                          FileIcons.arrowDown,
-                          height: 20,
-                          width: 20,
-                          color: AppColors.onSurface,
-                        ),
+                      CustomIconButton.asset(
+                        assetPath: FileIcons.arrowDown,
+                        iconSize: 20,
                         onPressed: () {
                           controllerText.clear();
                           searchQuery.value = '';
-
                           onClear();
-
                           state?.clearSearch();
                         },
                       ),
@@ -84,27 +79,18 @@ class SearchOverlayController {
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
                       disabledBorder: InputBorder.none,
-                      prefixIcon: IconButton(
+                      prefixIcon: CustomIconButton.asset(
+                        assetPath: FileIcons.search,
                         onPressed: () {},
-                        icon: Image.asset(
-                          FileIcons.search,
-                          width: 24,
-                          height: 24,
-                          color: AppColors.onSurface,
-                        ),
                       ),
 
-                      suffixIcon: IconButton(
+                      suffixIcon: CustomIconButton.asset(
+                        assetPath: FileIcons.clear,
                         onPressed: () {
                           controllerText.clear();
                           searchQuery.value = '';
                           onSearch('');
                         },
-                        icon: Image.asset(
-                          FileIcons.clear,
-                          width: 24,
-                          height: 24,
-                        ),
                       ),
                     ),
                   ),

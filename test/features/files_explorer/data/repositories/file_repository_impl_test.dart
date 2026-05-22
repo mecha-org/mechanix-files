@@ -1,6 +1,6 @@
 import 'package:file/file.dart';
 import 'package:file/memory.dart';
-import 'package:files/features/files_explorer/blocs/file_event.dart';
+import 'package:files/features/files_explorer/data/models/conflict_resolution_strategy.dart';
 import 'package:files/features/files_explorer/data/repositories/file_repository_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;

@@ -1,4 +1,5 @@
 import 'package:files/core/constants/icons.dart';
+import 'package:files/core/widgets/custom_icon_button.dart';
 import 'package:files/core/widgets/menu_row.dart';
 import 'package:files/features/files_explorer/blocs/file_boc.dart';
 import 'package:files/features/files_explorer/blocs/file_event.dart';
@@ -29,9 +30,8 @@ class FolderActionsMenu extends StatelessWidget {
         children: [
           Align(
             alignment: Alignment.centerRight,
-            child: IconButton(
-              constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-              icon: const Icon(Icons.close, color: Colors.white70),
+            child: CustomIconButton.icon(
+              iconData: Icons.close,
               onPressed: () => closeFolderActionsSheet(),
             ),
           ),

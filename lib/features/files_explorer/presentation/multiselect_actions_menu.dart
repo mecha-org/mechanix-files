@@ -1,5 +1,5 @@
-import 'package:files/core/theme/app_theme.dart';
 import 'package:files/core/constants/icons.dart';
+import 'package:files/core/widgets/custom_icon_button.dart';
 import 'package:files/core/widgets/menu_row.dart';
 import 'package:files/features/files_explorer/controllers/file_manager_controller.dart';
 import 'package:files/features/files_explorer/presentation/file_explorer.dart';
@@ -27,9 +27,8 @@ class MultiselectActionsMenu extends StatelessWidget {
         children: [
           Align(
             alignment: Alignment.centerRight,
-            child: IconButton(
-              constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-              icon: const Icon(Icons.close, color: AppColors.onSurface),
+            child: CustomIconButton.icon(
+              iconData: Icons.close,
               onPressed: () => closeMultiselectActionsSheet(),
             ),
           ),

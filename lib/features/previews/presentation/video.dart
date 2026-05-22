@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:files/core/theme/app_theme.dart';
+import 'package:files/core/widgets/custom_icon_button.dart';
 import 'package:files/features/files_explorer/presentation/file_explorer.dart';
 import 'package:files/features/previews/presentation/preview_action_bar.dart';
 import 'package:files/features/previews/presentation/time_bubble.dart';
@@ -196,7 +197,12 @@ class _VideoPreviewState extends State<VideoPreview> {
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Row(
                     children: [
-                      IconButton(
+                      CustomIconButton.icon(
+                        iconData:
+                            controller.value.isPlaying
+                                ? Icons.pause
+                                : Icons.play_arrow,
+                        iconSize: 28,
                         onPressed: () async {
                           if (_isDisposed || !controller.value.isInitialized) {
                             return;
@@ -214,13 +220,6 @@ class _VideoPreviewState extends State<VideoPreview> {
                             }
                           } catch (_) {}
                         },
-                        icon: Icon(
-                          controller.value.isPlaying
-                              ? Icons.pause
-                              : Icons.play_arrow,
-                          color: Colors.white,
-                          size: 28,
-                        ),
                       ),
 
                       const SizedBox(width: 14),
@@ -286,13 +285,12 @@ class _VideoPreviewState extends State<VideoPreview> {
 
                       const SizedBox(width: 14),
 
-                      IconButton(
-                        icon: Icon(
-                          controller.value.volume > 0
-                              ? Icons.volume_up
-                              : Icons.volume_off,
-                          color: Colors.white,
-                        ),
+                      CustomIconButton.icon(
+                        iconData:
+                            controller.value.volume > 0
+                                ? Icons.volume_up
+                                : Icons.volume_off,
+                        iconSize: 28,
                         onPressed: () async {
                           try {
                             if (controller.value.volume > 0) {

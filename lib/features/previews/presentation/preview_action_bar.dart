@@ -1,3 +1,4 @@
+import 'package:files/core/widgets/custom_icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:files/core/constants/icons.dart';
 import 'package:files/core/theme/app_theme.dart';
@@ -33,27 +34,15 @@ class PreviewActionBar extends StatelessWidget {
 
       child: BottomBar(
         /// BACK
-        leading: IconButton(
-          constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-          icon: Image.asset(
-            FileIcons.back,
-            width: 24,
-            height: 24,
-            color: AppColors.onSurface,
-          ),
+        leading: CustomIconButton.asset(
+          assetPath: FileIcons.back,
           onPressed: () => Navigator.pop(context),
         ),
 
         /// COPY / ACTION
         center: [
-          IconButton(
-            constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-            icon: Image.asset(
-              FileIcons.copy,
-              width: 24,
-              height: 24,
-              color: AppColors.onSurface,
-            ),
+          CustomIconButton.asset(
+            assetPath: FileIcons.copy,
             onPressed: () {
               state?.selectedPathsNotifier.value = {path};
               state?.handleCopy();
@@ -63,14 +52,8 @@ class PreviewActionBar extends StatelessWidget {
 
         /// INFO
         trailing: [
-          IconButton(
-            constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-            icon: Image.asset(
-              FileIcons.info,
-              width: 24,
-              height: 24,
-              color: AppColors.onSurface,
-            ),
+          CustomIconButton.asset(
+            assetPath: FileIcons.info,
             onPressed: () {
               rootContext.read<FilesBloc>().add(FetchFileDetails(path));
 

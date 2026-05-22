@@ -1,6 +1,6 @@
-import 'package:files/core/theme/app_theme.dart';
 import 'package:files/core/constants/icons.dart';
 import 'package:files/core/widgets/bottom_bar/bottom_bar.dart';
+import 'package:files/core/widgets/custom_icon_button.dart';
 import 'package:flutter/material.dart';
 
 class NormalBottomBar extends StatelessWidget {
@@ -11,14 +11,8 @@ class NormalBottomBar extends StatelessWidget {
     return BottomBar(
       key: const ValueKey('normal_bottom_bar'),
 
-      leading: IconButton(
-        constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-        icon: Image.asset(
-          FileIcons.back,
-          width: 24,
-          height: 24,
-          color: AppColors.onSurface,
-        ),
+      leading: CustomIconButton.asset(
+        assetPath: FileIcons.back,
         onPressed: () {
           // TODO: Handle close app
         },
@@ -42,33 +36,19 @@ class PasteDestinationBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomBar(
-      leading: IconButton(
-        icon: Image.asset(
-          FileIcons.back,
-          width: 24,
-          height: 24,
-          color: AppColors.onSurface,
-        ),
+      leading: CustomIconButton.asset(
+        assetPath: FileIcons.back,
         onPressed: onBack,
       ),
 
       trailing: [
-        IconButton(
-          icon: Image.asset(
-            FileIcons.check,
-            width: 24,
-            height: 24,
-            color: AppColors.onSurfaceVariantDark,
-          ),
+        CustomIconButton.asset(
+          assetPath: FileIcons.check,
           onPressed: onConfirm,
+          enabled: false,
         ),
-        IconButton(
-          icon: Image.asset(
-            FileIcons.moreVert,
-            width: 24,
-            height: 24,
-            color: AppColors.onSurface,
-          ),
+        CustomIconButton.asset(
+          assetPath: FileIcons.moreVert,
           onPressed: onMenu,
         ),
       ],

@@ -1,5 +1,6 @@
 import 'package:files/core/constants/icons.dart';
 import 'package:files/core/constants/path_constants.dart';
+import 'package:files/core/widgets/custom_icon_button.dart';
 import 'package:files/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:pdfrx/pdfrx.dart';
@@ -82,8 +83,8 @@ class _PdfPreviewState extends State<PdfPreview> {
                             color: AppColors.onSurfaceVariant,
                           ),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
+                        CustomIconButton.icon(
+                          iconData: Icons.close,
                           onPressed: () {
                             Navigator.pop(ctx, null);
                           },
@@ -120,13 +121,9 @@ class _PdfPreviewState extends State<PdfPreview> {
                         enabledBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,
                         disabledBorder: InputBorder.none,
-                        suffixIcon: IconButton(
+                        suffixIcon: CustomIconButton.asset(
+                          assetPath: FileIcons.clear,
                           onPressed: controllerText.clear,
-                          icon: Image.asset(
-                            FileIcons.clear,
-                            width: 24,
-                            height: 24,
-                          ),
                         ),
                       ),
                       onSubmitted: (_) {

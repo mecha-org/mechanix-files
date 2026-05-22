@@ -1,6 +1,6 @@
 import 'package:files/core/constants/icons.dart';
-import 'package:files/core/theme/app_theme.dart';
 import 'package:files/core/widgets/bottom_bar/bottom_bar.dart';
+import 'package:files/core/widgets/custom_icon_button.dart';
 import 'package:files/features/files_explorer/presentation/commons.dart';
 import 'package:files/features/recents/blocs/recent_file_event.dart';
 import 'package:files/features/recents/blocs/recent_file_state.dart';
@@ -70,14 +70,8 @@ class RecentFilesExplorerPageState extends State<RecentFilesExplorerPage> {
 
       bottomNavigationBar: BottomBar(
         key: const ValueKey('bottom_bar'),
-        leading: IconButton(
-          constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-          icon: Image.asset(
-            FileIcons.back,
-            width: 24,
-            height: 24,
-            color: AppColors.onSurface,
-          ),
+        leading: CustomIconButton.asset(
+          assetPath: FileIcons.back,
           onPressed: () => Navigator.pop(context),
         ),
       ),

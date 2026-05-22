@@ -1,6 +1,6 @@
 import 'package:files/core/constants/icons.dart';
-import 'package:files/core/theme/app_theme.dart';
 import 'package:files/core/widgets/bottom_bar/bottom_bar.dart';
+import 'package:files/core/widgets/custom_icon_button.dart';
 import 'package:files/features/files_explorer/controllers/file_manager_controller.dart';
 import 'package:files/features/files_explorer/presentation/file_details_dialog.dart';
 import 'package:files/features/files_explorer/presentation/file_explorer.dart';
@@ -123,62 +123,32 @@ class SelectionBottomBar extends StatelessWidget {
         return BottomBar(
           key: const ValueKey('selection_bottom_bar'),
 
-          leading: IconButton(
-            constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-            icon: const Icon(Icons.close, color: AppColors.onSurface, size: 24),
+          leading: CustomIconButton.icon(
+            iconData: Icons.close,
             onPressed: state.clearSelection,
           ),
 
           center: [
-            IconButton(
-              constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-              icon: Image.asset(
-                FileIcons.checkCircle,
-                width: 24,
-                height: 24,
-                color: AppColors.onSurface,
-              ),
+            CustomIconButton.asset(
+              assetPath: FileIcons.checkCircle,
               onPressed: state.handleSelectAll,
             ),
 
-            IconButton(
-              constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-              icon: Image.asset(
-                FileIcons.copy,
-                width: 24,
-                height: 24,
-                color:
-                    hasSelection
-                        ? AppColors.onSurface
-                        : AppColors.onSurfaceVariantDark,
-              ),
-              onPressed: hasSelection ? state.handleCopy : null,
+            CustomIconButton.asset(
+              assetPath: FileIcons.copy,
+              enabled: hasSelection,
+              onPressed: state.handleCopy,
             ),
 
-            IconButton(
-              constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-              icon: Image.asset(
-                FileIcons.move,
-                width: 24,
-                height: 24,
-                color:
-                    hasSelection
-                        ? AppColors.onSurface
-                        : AppColors.onSurfaceVariantDark,
-              ),
-              onPressed: hasSelection ? state.handleMove : null,
+            CustomIconButton.asset(
+              assetPath: FileIcons.move,
+              enabled: hasSelection,
+              onPressed: state.handleMove,
             ),
           ],
-
           trailing: [
-            IconButton(
-              constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-              icon: Image.asset(
-                FileIcons.moreVert,
-                width: 24,
-                height: 24,
-                color: AppColors.onSurface,
-              ),
+            CustomIconButton.asset(
+              assetPath: FileIcons.moreVert,
               onPressed: state.openMenu,
             ),
           ],
@@ -198,15 +168,8 @@ class NormalBottomBar extends StatelessWidget {
 
     return BottomBar(
       key: const ValueKey('normal_bottom_bar'),
-
-      leading: IconButton(
-        constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-        icon: Image.asset(
-          FileIcons.back,
-          width: 24,
-          height: 24,
-          color: AppColors.onSurface,
-        ),
+      leading: CustomIconButton.asset(
+        assetPath: FileIcons.back,
         onPressed: () {
           if (state?.isHomePageDir == true) {
             state?.homeNavigation();
@@ -217,25 +180,12 @@ class NormalBottomBar extends StatelessWidget {
       ),
 
       trailing: [
-        IconButton(
-          constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-          icon: Image.asset(
-            FileIcons.search,
-            width: 24,
-            height: 24,
-            color: AppColors.onSurface,
-          ),
+        CustomIconButton.asset(
+          assetPath: FileIcons.search,
           onPressed: state?.onSearchPressed,
         ),
-
-        IconButton(
-          constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-          icon: Image.asset(
-            FileIcons.moreVert,
-            width: 24,
-            height: 24,
-            color: AppColors.onSurface,
-          ),
+        CustomIconButton.asset(
+          assetPath: FileIcons.moreVert,
           onPressed: state?.openMenu,
         ),
       ],
@@ -258,14 +208,8 @@ class PasteDestinationBottomBar extends StatelessWidget {
     final state = rootContext.findAncestorStateOfType<FileExplorerPageState>();
 
     return BottomBar(
-      leading: IconButton(
-        constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-        icon: Image.asset(
-          FileIcons.back,
-          width: 24,
-          height: 24,
-          color: AppColors.onSurface,
-        ),
+      leading: CustomIconButton.asset(
+        assetPath: FileIcons.back,
         onPressed: () {
           if (state?.isHomePageDir == true) {
             state?.homeNavigation();
@@ -276,28 +220,16 @@ class PasteDestinationBottomBar extends StatelessWidget {
       ),
 
       trailing: [
-        IconButton(
-          constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-          icon: Image.asset(
-            FileIcons.check,
-            width: 24,
-            height: 24,
-            color: AppColors.onSurface,
-          ),
+        CustomIconButton.asset(
+          assetPath: FileIcons.check,
           onPressed: () {
             state?.handlePaste();
             state?.modeNotifier.value = ExplorerMode.browsing;
           },
         ),
 
-        IconButton(
-          constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-          icon: Image.asset(
-            FileIcons.moreVert,
-            width: 24,
-            height: 24,
-            color: AppColors.onSurface,
-          ),
+        CustomIconButton.asset(
+          assetPath: FileIcons.moreVert,
           onPressed: state?.openMenu,
         ),
       ],

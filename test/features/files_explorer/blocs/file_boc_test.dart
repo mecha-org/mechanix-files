@@ -5,6 +5,7 @@ import 'package:files/features/files_explorer/blocs/file_event.dart';
 import 'package:files/features/files_explorer/blocs/file_state.dart';
 import 'package:files/features/files_explorer/controllers/file_manager_controller.dart';
 import 'package:files/features/files_explorer/data/models/app_settings.dart';
+import 'package:files/features/files_explorer/data/models/conflict_resolution_strategy.dart';
 import 'package:files/features/files_explorer/data/repositories/app_settings_repository.dart';
 import 'package:files/features/files_explorer/data/repositories/file_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -72,7 +73,7 @@ void main() {
       act: (bloc) => bloc.add(InitializeFiles()),
       expect:
           () => [
-            bloc.state.copyWith(loading: true),
+            bloc.state.copyWith(loading: true, showHiddenFiles: false),
             bloc.state.copyWith(loading: false, showHiddenFiles: true),
           ],
     );
@@ -175,7 +176,6 @@ void main() {
       act: (bloc) => bloc.add(CancelCopyMode()),
       expect: () => [bloc.state.copyWith(isCopyMode: false, copiedPaths: [])],
     );
-
     blocTest<FilesBloc, FilesState>(
       'toggles hidden files',
       build: () {
@@ -188,8 +188,11 @@ void main() {
       act: (bloc) => bloc.add(ToggleHiddenFiles()),
       expect:
           () => [
-            bloc.state.copyWith(showHiddenFiles: true, loading: true),
-            bloc.state.copyWith(loading: false),
+            bloc.state.copyWith(loading: true, showHiddenFiles: false),
+
+            bloc.state.copyWith(loading: true, showHiddenFiles: true),
+
+            bloc.state.copyWith(loading: false, showHiddenFiles: true),
           ],
       verify: (_) {
         verify(() => mockSettingsRepository.updateShowHidden(true)).called(1);

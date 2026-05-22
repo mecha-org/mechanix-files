@@ -5,6 +5,7 @@ import 'package:files/core/theme/app_theme.dart';
 import 'package:files/core/constants/icons.dart';
 import 'package:files/core/constants/path_constants.dart';
 import 'package:files/core/utils/commons.dart';
+import 'package:files/core/widgets/custom_icon_button.dart';
 import 'package:files/core/widgets/notification/custom_notification.dart';
 import 'package:files/features/files_explorer/blocs/file_boc.dart';
 import 'package:files/features/files_explorer/blocs/file_event.dart';
@@ -724,8 +725,8 @@ class FileExplorerPageState extends State<FileExplorerPage> {
                             color: AppColors.onSurfaceVariant,
                           ),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
+                        CustomIconButton.icon(
+                          iconData: Icons.close,
                           onPressed: () {
                             controller.clearLiveRename();
                             controller.clearNewFolder();
@@ -771,13 +772,9 @@ class FileExplorerPageState extends State<FileExplorerPage> {
                         enabledBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,
                         disabledBorder: InputBorder.none,
-                        suffixIcon: IconButton(
+                        suffixIcon: CustomIconButton.asset(
+                          assetPath: FileIcons.clear,
                           onPressed: controllerText.clear,
-                          icon: Image.asset(
-                            FileIcons.clear,
-                            width: 24,
-                            height: 24,
-                          ),
                         ),
                       ),
                     ),

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:files/core/widgets/custom_icon_button.dart';
 import 'package:files/features/previews/presentation/preview_action_bar.dart';
 import 'package:files/features/previews/presentation/time_bubble.dart';
 import 'package:flutter/material.dart';
@@ -156,7 +157,9 @@ class _AudioPreviewState extends State<AudioPreview> {
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Row(
                     children: [
-                      IconButton(
+                      CustomIconButton.icon(
+                        iconData: _isPlaying ? Icons.pause : Icons.play_arrow,
+                        iconSize: 28,
                         onPressed: () {
                           setState(() {
                             _isPlaying
@@ -166,11 +169,6 @@ class _AudioPreviewState extends State<AudioPreview> {
                                 );
                           });
                         },
-                        icon: Icon(
-                          _isPlaying ? Icons.pause : Icons.play_arrow,
-                          color: Colors.white,
-                          size: 28,
-                        ),
                       ),
 
                       const SizedBox(width: 14),
@@ -206,11 +204,9 @@ class _AudioPreviewState extends State<AudioPreview> {
                       ),
                       const SizedBox(width: 14),
 
-                      IconButton(
-                        icon: Icon(
-                          _isMuted ? Icons.volume_off : Icons.volume_up,
-                          color: AppColors.onBackground,
-                        ),
+                      CustomIconButton.icon(
+                        iconData: _isMuted ? Icons.volume_off : Icons.volume_up,
+                        iconSize: 28,
                         onPressed: () async {
                           setState(() {
                             _isMuted = !_isMuted;

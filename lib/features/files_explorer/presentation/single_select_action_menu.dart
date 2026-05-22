@@ -1,5 +1,6 @@
 import 'package:files/core/theme/app_theme.dart';
 import 'package:files/core/constants/icons.dart';
+import 'package:files/core/widgets/custom_icon_button.dart';
 import 'package:files/core/widgets/menu_row.dart';
 import 'package:files/core/widgets/middle_ellipsis_text.dart';
 import 'package:files/features/files_explorer/blocs/file_boc.dart';
@@ -83,12 +84,8 @@ class SingleSelectActionsMenu extends StatelessWidget {
                 ),
 
                 /// Right side (fixed size)
-                IconButton(
-                  constraints: const BoxConstraints(
-                    minWidth: 48,
-                    minHeight: 48,
-                  ),
-                  icon: const Icon(Icons.close, color: AppColors.onSurface),
+                CustomIconButton.icon(
+                  iconData: Icons.close,
                   onPressed: () {
                     closeSingleSelectActionsSheet();
                     state.selectedPathsNotifier.value = {};
