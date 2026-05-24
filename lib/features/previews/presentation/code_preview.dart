@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:files/core/utils/app_file_system.dart';
 import 'package:files/core/theme/app_theme.dart';
 import 'package:files/features/files_explorer/presentation/file_explorer.dart';
 import 'package:files/features/previews/presentation/preview_action_bar.dart';
@@ -40,7 +40,7 @@ class _CodePreviewState extends State<CodePreview> {
 
   Future<void> _loadFile() async {
     try {
-      final file = File(widget.filePath);
+      final file = AppFileSystem.instance.file(widget.filePath);
 
       final buffer = StringBuffer();
       bool controllerCreated = false;
@@ -98,10 +98,7 @@ class _CodePreviewState extends State<CodePreview> {
               ? Center(
                 child: Text(
                   AppLocalizations.of(context)!.fileLoadError,
-                  style: const TextStyle(
-                    color: AppColors.onSurfaceVariant,
-                    fontSize: 16,
-                  ),
+                  style: Theme.of(context).textTheme.labelSmall,
                 ),
               )
               : SingleChildScrollView(

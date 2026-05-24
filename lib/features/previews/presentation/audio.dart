@@ -36,6 +36,7 @@ class _AudioPreviewState extends State<AudioPreview> {
   StreamSubscription? _posSub;
   StreamSubscription? _durSub;
   StreamSubscription? _stateSub;
+  bool _hasError = false;
 
   @override
   void initState() {
@@ -44,23 +45,30 @@ class _AudioPreviewState extends State<AudioPreview> {
   }
 
   Future<void> _initAudio() async {
-    await _player.setSource(DeviceFileSource(widget.filePath));
-    await _player.setVolume(_volume);
+    try {
+      await _player.setSource(DeviceFileSource(widget.filePath));
+      await _player.setVolume(_volume);
 
-    _durSub = _player.onDurationChanged.listen((d) {
-      if (!mounted) return;
-      setState(() => _duration = d);
-    });
+      _durSub = _player.onDurationChanged.listen((d) {
+        if (!mounted) return;
+        setState(() => _duration = d);
+      });
 
-    _posSub = _player.onPositionChanged.listen((p) {
-      if (!mounted) return;
-      setState(() => _position = p);
-    });
+      _posSub = _player.onPositionChanged.listen((p) {
+        if (!mounted) return;
+        setState(() => _position = p);
+      });
 
-    _stateSub = _player.onPlayerStateChanged.listen((s) {
+      _stateSub = _player.onPlayerStateChanged.listen((s) {
+        if (!mounted) return;
+        setState(() => _isPlaying = s == PlayerState.playing);
+      });
+    } catch (e) {
       if (!mounted) return;
-      setState(() => _isPlaying = s == PlayerState.playing);
-    });
+      setState(() {
+        _hasError = true;
+      });
+    }
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'dart:async';
-import 'dart:io';
-import 'dart:io' as io;
+import 'package:ellipsized_text/ellipsized_text.dart';
+import 'package:file/file.dart';
+import 'package:files/core/utils/app_file_system.dart';
 import 'package:files/core/theme/app_theme.dart';
 import 'package:files/core/constants/icons.dart';
 import 'package:files/core/constants/path_constants.dart';
@@ -105,16 +106,16 @@ class FileExplorerPageState extends State<FileExplorerPage> {
     );
 
     // 1. Always start from home first
-    await controller.openDirectory(Directory(homeDir));
+    await controller.openDirectory(AppFileSystem.instance.directory(homeDir));
     if (!mounted) return;
 
     final initialPath = widget.startPath;
     if (initialPath == null) return;
 
-    final type = io.FileSystemEntity.typeSync(initialPath);
+    final type = AppFileSystem.instance.typeSync(initialPath);
 
     if (type == FileSystemEntityType.file) {
-      final file = File(initialPath);
+      final file = AppFileSystem.instance.file(initialPath);
 
       // 2. Open parent directory
       await controller.openDirectory(file.parent);
@@ -126,7 +127,9 @@ class FileExplorerPageState extends State<FileExplorerPage> {
         // handle file tap here
       });
     } else {
-      await controller.openDirectory(Directory(initialPath));
+      await controller.openDirectory(
+        AppFileSystem.instance.directory(initialPath),
+      );
     }
   }
 
@@ -182,7 +185,7 @@ class FileExplorerPageState extends State<FileExplorerPage> {
     // 3. Normal navigation logic
     if (controller.getCurrentPath.isEmpty) return;
 
-    final current = Directory(controller.getCurrentPath);
+    final current = AppFileSystem.instance.directory(controller.getCurrentPath);
     final parent = current.parent;
 
     if (parent.path == current.path || await controller.isRootDirectory()) {
@@ -635,7 +638,9 @@ class FileExplorerPageState extends State<FileExplorerPage> {
     final previousPath = controller.getCurrentPath;
 
     // Open newly created folder
-    await controller.openDirectory(Directory(folderPath));
+    await controller.openDirectory(
+      AppFileSystem.instance.directory(folderPath),
+    );
 
     // Paste inside it
     await PasteHandler.handlePaste(
@@ -647,7 +652,9 @@ class FileExplorerPageState extends State<FileExplorerPage> {
     );
 
     // Restore previous location
-    await controller.openDirectory(Directory(previousPath));
+    await controller.openDirectory(
+      AppFileSystem.instance.directory(previousPath),
+    );
 
     reload();
 
@@ -717,12 +724,11 @@ class FileExplorerPageState extends State<FileExplorerPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          AppLocalizations.of(ctx)!.renameItem(initialName),
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w300,
-                            color: AppColors.onSurfaceVariant,
+                        Expanded(
+                          child: EllipsizedText(
+                            AppLocalizations.of(ctx)!.renameItem(initialName),
+                            type: EllipsisType.middle,
+                            style: Theme.of(context).textTheme.labelLarge,
                           ),
                         ),
                         CustomIconButton.icon(

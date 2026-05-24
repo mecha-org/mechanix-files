@@ -23,6 +23,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 
+import 'package:files/core/utils/app_file_system.dart';
+
 void main() {
   final openPath = _parseOpenPath();
   Hive.registerAdapter(AppSettingsAdapter());
@@ -31,7 +33,9 @@ void main() {
   runApp(
     MultiRepositoryProvider(
       providers: [
-        RepositoryProvider<FileRepository>(create: (_) => FileRepositoryImpl()),
+        RepositoryProvider<FileRepository>(
+          create: (_) => FileRepositoryImpl(fs: AppFileSystem.instance),
+        ),
 
         RepositoryProvider<RecentFilesRepository>(
           create: (_) => RecentFilesRepositoryImpl(),
@@ -42,7 +46,7 @@ void main() {
         ),
 
         RepositoryProvider<TrashRepository>(
-          create: (_) => TrashRepositoryImpl(),
+          create: (_) => TrashRepositoryImpl(fs: AppFileSystem.instance),
         ),
       ],
 

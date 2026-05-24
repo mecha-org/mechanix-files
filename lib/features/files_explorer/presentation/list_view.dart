@@ -1,4 +1,4 @@
-import 'dart:io' as io;
+import 'package:file/file.dart';
 import 'dart:ui';
 
 import 'package:ellipsized_text/ellipsized_text.dart';
@@ -41,7 +41,7 @@ class ExplorerListSection extends StatelessWidget {
         return ValueListenableBuilder<Set<String>>(
           valueListenable: selectedPathsNotifier,
           builder: (context, selectedPaths, _) {
-            return ValueListenableBuilder<List<io.FileSystemEntity>>(
+            return ValueListenableBuilder<List<FileSystemEntity>>(
               valueListenable: controller.paginatedEntities,
               builder: (context, entities, _) {
                 if (entities.isEmpty) {
@@ -159,22 +159,16 @@ class ExplorerListSection extends StatelessWidget {
                                   EllipsizedText(
                                     title,
                                     type: EllipsisType.middle,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      color: AppColors.onSurface,
-                                      fontWeight: FontWeight.w400,
-                                    ),
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
                                   ),
 
                                   const SizedBox(height: 2),
 
                                   Text(
                                     formatModifiedTime(context, modified),
-                                    style: const TextStyle(
-                                      fontSize: 13,
-                                      color: AppColors.onSurfaceVariant,
-                                      fontWeight: FontWeight.w400,
-                                    ),
+                                    style:
+                                        Theme.of(context).textTheme.labelSmall,
                                   ),
                                 ],
                               ),

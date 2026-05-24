@@ -32,10 +32,7 @@ Future<bool?> showMoveToTrashConfirmationSheet({
                 itemCount > 1
                     ? AppLocalizations.of(context)!.moveItemsToTrashConfirmation
                     : AppLocalizations.of(context)!.moveItemToTrashConfirmation,
-                style: const TextStyle(
-                  color: AppColors.onSurface,
-                  fontSize: 16,
-                ),
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
 
               const SizedBox(height: 16),

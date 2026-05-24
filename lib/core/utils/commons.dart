@@ -1,6 +1,6 @@
-import 'dart:io' as io;
 import 'dart:math' as math;
 
+import 'package:files/core/utils/app_file_system.dart';
 import 'package:files/l10n/app_localizations.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -63,7 +63,7 @@ Future<String> generateUniqueFolderName(
   int counter = 1;
 
   // If "New Folder" exists, try "New Folder (1)", "New Folder (2)"...
-  while (await io.Directory(candidate).exists()) {
+  while (await AppFileSystem.instance.directory(candidate).exists()) {
     candidate = p.join(basePath, '$baseName ($counter)');
     counter++;
   }

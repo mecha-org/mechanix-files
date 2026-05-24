@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:file/local.dart';
+import 'package:files/core/utils/app_file_system.dart';
 import 'package:files/features/files_explorer/data/repositories/app_settings_repository.dart';
 import 'package:files/features/recents/blocs/recent_file_state.dart';
 import 'package:files/features/recents/data/repositories/recent_files_repository.dart';
@@ -27,7 +27,7 @@ class RecentFilesBloc extends Bloc<RecentFilesEvent, RecentFileState> {
     Emitter<RecentFileState> emit,
   ) async {
     try {
-      final fileSystem = const LocalFileSystem();
+      final fileSystem = AppFileSystem.instance;
       final recentFiles = await recentFilesRepository.getRecentFiles();
 
       final visibleFiles =

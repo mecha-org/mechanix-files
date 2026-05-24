@@ -2,6 +2,8 @@ import 'package:hive/hive.dart';
 
 part 'app_settings.g.dart';
 
+const String appSettingsTable = "appSettingsTable";
+
 @HiveType(typeId: 0)
 class AppSettings extends HiveObject {
   @HiveField(0)

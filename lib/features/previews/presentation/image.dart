@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:files/core/utils/app_file_system.dart';
 import 'package:files/core/theme/app_theme.dart';
 import 'package:files/features/files_explorer/presentation/file_explorer.dart';
 import 'package:files/features/previews/presentation/preview_action_bar.dart';
@@ -48,9 +47,19 @@ class _RasterViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final file = AppFileSystem.instance.file(imagePath);
+    if (!file.existsSync() || file.lengthSync() == 0) {
+      return Center(
+        child: Text(
+          'Image file is empty',
+          style: Theme.of(context).textTheme.labelSmall,
+        ),
+      );
+    }
+    final bytes = file.readAsBytesSync();
     return Center(
       child: PhotoView(
-        imageProvider: FileImage(File(imagePath)),
+        imageProvider: MemoryImage(bytes),
         backgroundDecoration: const BoxDecoration(color: AppColors.surface),
         minScale: PhotoViewComputedScale.contained,
         maxScale: PhotoViewComputedScale.covered * 2,
@@ -66,13 +75,23 @@ class _SvgViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final file = AppFileSystem.instance.file(imagePath);
+    if (!file.existsSync() || file.lengthSync() == 0) {
+      return Center(
+        child: Text(
+          'Image file is empty',
+          style: Theme.of(context).textTheme.labelSmall,
+        ),
+      );
+    }
+    final bytes = file.readAsBytesSync();
     return Center(
       child: PhotoView.customChild(
         backgroundDecoration: const BoxDecoration(color: AppColors.surface),
         minScale: PhotoViewComputedScale.contained,
         maxScale: PhotoViewComputedScale.covered * 2,
-        child: SvgPicture.file(
-          File(imagePath),
+        child: SvgPicture.memory(
+          bytes,
           fit: BoxFit.contain,
           placeholderBuilder: (_) => const CircularProgressIndicator(),
         ),

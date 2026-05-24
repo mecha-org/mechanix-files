@@ -1,4 +1,3 @@
-import 'package:files/core/theme/app_theme.dart';
 import 'package:files/core/constants/icons.dart';
 import 'package:files/core/widgets/custom_icon_button.dart';
 import 'package:files/core/widgets/menu_row.dart';

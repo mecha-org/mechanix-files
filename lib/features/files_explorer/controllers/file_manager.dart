@@ -1,6 +1,8 @@
 library file_manager;
 
-import 'dart:io';
+import 'dart:io' as io;
+import 'package:file/file.dart';
+import 'package:files/core/utils/app_file_system.dart';
 import 'dart:math' as math;
 import 'package:files/features/files_explorer/controllers/file_manager_controller.dart';
 import 'package:flutter/material.dart';
@@ -104,7 +106,7 @@ class FileManager extends StatefulWidget {
   _FileManagerState createState() => _FileManagerState();
 
   static Future<void> requestFilesAccessPermission() async {
-    if (Platform.isAndroid) {
+    if (io.Platform.isAndroid) {
       try {
         await _methodChannel.invokeMethod('requestFilesAccessPermission');
       } on PlatformException catch (e) {
@@ -167,7 +169,7 @@ class FileManager extends StatefulWidget {
 
   /// Creates the directory if it doesn't exist.
   static Future<void> createFolder(String currentPath, String name) async {
-    await Directory(currentPath + "/" + name).create();
+    await AppFileSystem.instance.directory(currentPath + "/" + name).create();
   }
 
   /// Return file extension as String.
@@ -184,10 +186,10 @@ class FileManager extends StatefulWidget {
   /// Get list of available storage in the device
   /// returns an empty list if there is no storage
   static Future<List<Directory>> getStorageList() async {
-    if (Platform.isLinux) {
-      final Directory dir = await getApplicationDocumentsDirectory();
+    if (io.Platform.isLinux) {
+      final io.Directory dir = await getApplicationDocumentsDirectory();
       // Gives the home directory.
-      final Directory home = dir.parent;
+      final Directory home = AppFileSystem.instance.directory(dir.parent.path);
 
       // you may provide root directory.
       // final Directory root = dir.parent.parent.parent;
@@ -229,7 +231,7 @@ class _FileManagerState extends State<FileManager> {
   }
 
   Future<List<FileSystemEntity>> entityList(String path, SortBy sortBy) async {
-    List<FileSystemEntity> entitys = await Directory(path).list().toList();
+    List<FileSystemEntity> entitys = await AppFileSystem.instance.directory(path).list().toList();
     switch (sortBy) {
       case SortBy.name:
         return entitys.sortByName;

@@ -77,11 +77,7 @@ class _PdfPreviewState extends State<PdfPreview> {
                       children: [
                         Text(
                           AppLocalizations.of(context)!.enterPdfPassword,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w300,
-                            color: AppColors.onSurfaceVariant,
-                          ),
+                          style: Theme.of(context).textTheme.labelLarge,
                         ),
                         CustomIconButton.icon(
                           iconData: Icons.close,

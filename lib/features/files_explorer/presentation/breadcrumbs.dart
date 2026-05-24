@@ -1,8 +1,8 @@
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:files/core/theme/app_theme.dart';
 import 'package:files/core/constants/path_constants.dart';
+import 'package:files/core/utils/app_file_system.dart';
 import 'package:files/features/files_explorer/controllers/file_manager_controller.dart';
 import 'package:files/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -67,19 +67,12 @@ class ExplorerBreadcrumbs extends StatelessWidget {
                       : AppLocalizations.of(
                         context,
                       )!.copyMoveMultipleItems(label, count),
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.onSurfaceVariant,
-                  ),
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
 
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 6),
-                  child: Text(
-                    ">",
-                    style: TextStyle(color: AppColors.onSurfaceVariant),
-                  ),
+                  child: Text(">"),
                 ),
 
                 /// ---------------- BREADCRUMBS ----------------
@@ -101,7 +94,9 @@ class ExplorerBreadcrumbs extends StatelessWidget {
                                     ? null
                                     : () async {
                                       await controller.openDirectory(
-                                        Directory(item['path']!),
+                                        AppFileSystem.instance.directory(
+                                          item['path']!,
+                                        ),
                                       );
 
                                       if (scrollController.hasClients) {
@@ -119,8 +114,9 @@ class ExplorerBreadcrumbs extends StatelessWidget {
                               ),
                               child: Text(
                                 item['label']!,
-                                style: TextStyle(
-                                  fontSize: 18,
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.labelLarge?.copyWith(
                                   fontWeight:
                                       isLast
                                           ? FontWeight.w600
@@ -159,22 +155,14 @@ class ExplorerBreadcrumbs extends StatelessWidget {
           AppLocalizations.of(context)!.selectedItems(selectionCount),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            fontSize: 20,
-            color: AppColors.onSurfaceVariant,
-            fontWeight: FontWeight.w600,
-          ),
+          style: Theme.of(context).textTheme.headlineMedium,
         );
       }
 
       if (selectionCount == 0 && isCopyMode == false && isMoveMode == false) {
         return Text(
           AppLocalizations.of(context)!.noSelection,
-          style: const TextStyle(
-            fontSize: 20,
-            color: AppColors.onSurfaceVariant,
-            fontWeight: FontWeight.w500,
-          ),
+          style: Theme.of(context).textTheme.headlineMedium,
         );
       }
     }
@@ -211,7 +199,9 @@ class ExplorerBreadcrumbs extends StatelessWidget {
                               ? null
                               : () async {
                                 await controller.openDirectory(
-                                  Directory(item['path']!),
+                                  AppFileSystem.instance.directory(
+                                    item['path']!,
+                                  ),
                                 );
                                 if (scrollController.hasClients) {
                                   scrollController.jumpTo(0);
@@ -225,8 +215,9 @@ class ExplorerBreadcrumbs extends StatelessWidget {
                         child: Text(
                           item['label']!,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 20,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.labelLarge?.copyWith(
                             fontWeight:
                                 isLast ? FontWeight.w600 : FontWeight.w400,
                             color:

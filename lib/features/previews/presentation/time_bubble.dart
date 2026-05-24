@@ -14,10 +14,7 @@ class TimeBubble extends StatelessWidget {
         color: AppColors.backgroundVariant.withOpacity(0.6),
         borderRadius: BorderRadius.circular(6),
       ),
-      child: Text(
-        text,
-        style: const TextStyle(color: AppColors.onSurfaceVariant, fontSize: 14),
-      ),
+      child: Text(text, style: Theme.of(context).textTheme.labelSmall),
     );
   }
 }

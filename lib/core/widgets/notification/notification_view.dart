@@ -98,10 +98,7 @@ class _SimpleNotificationViewState extends State<SimpleNotificationView>
                   Expanded(
                     child: Text(
                       widget.message,
-                      style: const TextStyle(
-                        color: AppColors.onSurface,
-                        fontSize: 13,
-                      ),
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
                   GestureDetector(

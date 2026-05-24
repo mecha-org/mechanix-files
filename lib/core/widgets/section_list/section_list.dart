@@ -58,8 +58,7 @@ class SectionListItem extends StatelessWidget {
                 item.title,
                 style:
                     item.titleStyle ??
-                    TextStyle(
-                      fontSize: 16,
+                    Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: item.disabled ? Colors.grey : Colors.white,
                     ),
               ),

@@ -14,11 +14,81 @@ class AppColors {
 
 class AppTheme {
   static ThemeData get darkTheme {
-    return ThemeData.dark().copyWith(
+    return ThemeData(
+      brightness: Brightness.dark,
+      fontFamily: 'Sora',
+      primaryColor: AppColors.onSurface,
       scaffoldBackgroundColor: AppColors.background,
-      colorScheme: const ColorScheme.dark(
-        surface: AppColors.surface,
-        onSurface: AppColors.onSurface,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+      ),
+      scrollbarTheme: const ScrollbarThemeData(
+        radius: Radius.circular(4),
+        thickness: WidgetStatePropertyAll(4),
+        thumbColor: WidgetStatePropertyAll(AppColors.onSurfaceVariantDark),
+      ),
+      textTheme: const TextTheme(
+        displayLarge: TextStyle(
+          fontSize: 60,
+          fontWeight: FontWeight.w400,
+          color: AppColors.onSurface,
+        ),
+        displayMedium: TextStyle(
+          fontSize: 40,
+          fontWeight: FontWeight.w400,
+          color: AppColors.onSurface,
+        ),
+        displaySmall: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w300,
+          color: AppColors.onSurfaceVariantDark,
+        ),
+        headlineLarge: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.w600,
+          color: AppColors.onSurface,
+        ),
+        headlineMedium: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: AppColors.onSurfaceVariant,
+        ),
+        headlineSmall: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          color: AppColors.onSurfaceVariant,
+        ),
+        titleLarge: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.w400,
+          color: AppColors.onSurface,
+        ),
+        bodyLarge: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w400,
+          color: AppColors.onSurface,
+        ),
+        bodyMedium: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          color: AppColors.onSurface,
+        ),
+        bodySmall: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          color: AppColors.onSurface,
+        ),
+        labelLarge: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w400,
+          color: AppColors.onSurfaceVariant,
+        ),
+        labelSmall: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          color: AppColors.onSurfaceVariant,
+        ),
       ),
     );
   }

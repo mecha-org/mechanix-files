@@ -2,6 +2,8 @@ import 'package:hive/hive.dart';
 
 part 'recent_files.g.dart';
 
+const String recentFilesTable = "recentFilesTable";
+
 @HiveType(typeId: 2)
 class RecentFile extends HiveObject {
   @HiveField(0)

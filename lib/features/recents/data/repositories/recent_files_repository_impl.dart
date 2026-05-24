@@ -1,5 +1,4 @@
 import 'package:files/core/constants/app_limits.dart';
-import 'package:files/core/constants/hive_tables.dart';
 import 'package:files/core/utils/app_logger.dart';
 import 'package:files/features/files_explorer/services/hive_service.dart';
 import 'package:files/features/recents/data/models/recent_files.dart';
@@ -7,20 +6,20 @@ import 'package:hive/hive.dart';
 import 'recent_files_repository.dart';
 
 class RecentFilesRepositoryImpl extends RecentFilesRepository {
-  Box<RecentFile> get box => Hive.box<RecentFile>(HiveTables.recentFilesTable);
+  Box<RecentFile> get box => Hive.box<RecentFile>(recentFilesTable);
 
   Future<void> ensureHiveConnected() async {
     try {
-      if (!Hive.isBoxOpen(HiveTables.recentFilesTable)) {
+      if (!Hive.isBoxOpen(recentFilesTable)) {
         await HiveService.initializeHive();
-        await Hive.openBox<RecentFile>(HiveTables.recentFilesTable);
+        await Hive.openBox<RecentFile>(recentFilesTable);
       }
     } catch (e) {
       AppLogger.e('Failed to open Hive box: $e');
     }
   }
 
-  Box<RecentFile> _box() => Hive.box<RecentFile>(HiveTables.recentFilesTable);
+  Box<RecentFile> _box() => Hive.box<RecentFile>(recentFilesTable);
 
   @override
   Future<List<RecentFile>> getRecentFiles() async {

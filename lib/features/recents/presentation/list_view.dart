@@ -61,12 +61,14 @@ class RecentFilesList extends StatelessWidget {
               file.name,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
 
             subtitle: Text(
               fullPath,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.labelSmall,
             ),
 
             onTap: () => onTap(fullPath),

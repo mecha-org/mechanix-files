@@ -35,8 +35,7 @@ class MenuRow extends StatelessWidget {
             const SizedBox(width: 18),
             Text(
               title,
-              style: TextStyle(
-                fontSize: 18,
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
                 color:
                     enabled
                         ? AppColors.onSurface

@@ -74,11 +74,8 @@ class FileDetailsDialog extends StatelessWidget {
                       children: [
                         Text(
                           AppLocalizations.of(context)!.fileInfo,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: Theme.of(context).textTheme.headlineMedium
+                              ?.copyWith(color: AppColors.onSurface),
                         ),
 
                         Row(
@@ -89,11 +86,7 @@ class FileDetailsDialog extends StatelessWidget {
                                 fileItem.name,
                                 type: EllipsisType.middle,
                                 textAlign: TextAlign.right,
-                                style: const TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                style: Theme.of(context).textTheme.bodyMedium,
                               ),
                             ),
 
@@ -173,14 +166,7 @@ class DetailRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              color: AppColors.onSurfaceVariant,
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
+          Text(title, style: Theme.of(context).textTheme.headlineSmall),
 
           const SizedBox(width: 16),
 
@@ -188,11 +174,7 @@ class DetailRow extends StatelessWidget {
             child: Text(
               value,
               textAlign: TextAlign.right,
-              style: const TextStyle(
-                color: AppColors.onSurface,
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-              ),
+              style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
         ],

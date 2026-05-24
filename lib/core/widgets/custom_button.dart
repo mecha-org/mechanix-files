@@ -30,7 +30,12 @@ class CustomButton extends StatelessWidget {
         padding: padding,
       ),
       onPressed: onPressed,
-      child: Text(label, style: const TextStyle(fontSize: 20)),
+      child: Text(
+        label,
+        style: Theme.of(
+          context,
+        ).textTheme.labelLarge?.copyWith(color: textColor),
+      ),
     );
   }
 }

@@ -103,11 +103,7 @@ class FileHomePageState extends State<FileHomePage> {
             automaticallyImplyLeading: false,
             title: Text(
               title,
-              style: const TextStyle(
-                fontSize: 20,
-                color: AppColors.onSurfaceVariant,
-                fontWeight: FontWeight.w600,
-              ),
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           ),
 
@@ -122,7 +118,7 @@ class FileHomePageState extends State<FileHomePage> {
                     items: [
                       SectionItem(
                         title: AppLocalizations.of(context)!.homeDirectory,
-                        titleStyle: listItemTitleTextStyle(),
+                        titleStyle: Theme.of(context).textTheme.bodyLarge,
                         leading: Image.asset(
                           height: 24,
                           width: 24,
@@ -139,7 +135,7 @@ class FileHomePageState extends State<FileHomePage> {
 
                       SectionItem(
                         title: AppLocalizations.of(context)!.recent,
-                        titleStyle: listItemTitleTextStyle(),
+                        titleStyle: Theme.of(context).textTheme.bodyLarge,
                         leading: Image.asset(
                           height: 24,
                           width: 24,
@@ -156,7 +152,7 @@ class FileHomePageState extends State<FileHomePage> {
 
                       SectionItem(
                         title: AppLocalizations.of(context)!.downloads,
-                        titleStyle: listItemTitleTextStyle(),
+                        titleStyle: Theme.of(context).textTheme.bodyLarge,
                         leading: Image.asset(
                           height: 24,
                           width: 24,
@@ -173,7 +169,7 @@ class FileHomePageState extends State<FileHomePage> {
 
                       SectionItem(
                         title: AppLocalizations.of(context)!.documents,
-                        titleStyle: listItemTitleTextStyle(),
+                        titleStyle: Theme.of(context).textTheme.bodyLarge,
                         leading: Image.asset(
                           height: 24,
                           width: 24,
@@ -190,7 +186,7 @@ class FileHomePageState extends State<FileHomePage> {
 
                       SectionItem(
                         title: AppLocalizations.of(context)!.trash,
-                        titleStyle: listItemTitleTextStyle(),
+                        titleStyle: Theme.of(context).textTheme.bodyLarge,
                         leading: Image.asset(
                           height: 24,
                           width: 24,
@@ -216,7 +212,7 @@ class FileHomePageState extends State<FileHomePage> {
                     items: [
                       SectionItem(
                         title: AppLocalizations.of(context)!.root,
-                        titleStyle: listItemTitleTextStyle(),
+                        titleStyle: Theme.of(context).textTheme.bodyLarge,
                         leading: Image.asset(
                           height: 24,
                           width: 24,
@@ -258,10 +254,6 @@ class FileHomePageState extends State<FileHomePage> {
         );
       },
     );
-  }
-
-  TextStyle listItemTitleTextStyle() {
-    return const TextStyle(fontSize: 20, fontWeight: FontWeight.w400);
   }
 
   void onTap(BuildContext context, String path, String title) {

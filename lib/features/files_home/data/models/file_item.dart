@@ -55,6 +55,7 @@ const textFileTypes = [
   '.xml',
   '.rs',
   '.txt',
+  '.sh',
 ];
 
 const audioFileTypes = ['.mp3', '.wav', '.flac', '.m4a', '.ogg', '.opus'];
@@ -70,6 +71,8 @@ const imageFileTypes = [
   '.gif',
   '.bmp',
 ];
+
+const docxFileTypes = [".docx"];
 
 // FileSystemEntity extension
 extension FileSystemEntityIcon on io.FileSystemEntity {

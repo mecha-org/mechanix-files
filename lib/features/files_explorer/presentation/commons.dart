@@ -1,13 +1,13 @@
 import 'dart:io' as io;
 import 'dart:ui' as ui;
 
-import 'package:files/core/theme/app_theme.dart';
 import 'package:files/core/widgets/notification/custom_notification.dart';
 import 'package:files/features/files_explorer/controllers/file_manager_controller.dart';
 import 'package:files/features/files_explorer/presentation/file_explorer.dart';
 import 'package:files/features/files_home/data/models/file_item.dart';
 import 'package:files/features/previews/presentation/audio.dart';
 import 'package:files/features/previews/presentation/code_preview.dart';
+import 'package:files/features/previews/presentation/docx_preview.dart';
 import 'package:files/features/previews/presentation/image.dart';
 import 'package:files/features/previews/presentation/pdf_preview.dart';
 import 'package:files/features/previews/presentation/video.dart';
@@ -18,19 +18,6 @@ import 'package:files/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path/path.dart' as p;
-
-TextStyle confirmationDialogRegularStyle(BuildContext context) =>
-    const TextStyle(
-      color: AppColors.onSurface,
-      fontSize: 24,
-      fontWeight: FontWeight.w400,
-    );
-
-TextStyle confirmationDialogBoldStyle(BuildContext context) => const TextStyle(
-  color: AppColors.onSurface,
-  fontSize: 24,
-  fontWeight: FontWeight.w600,
-);
 
 double textWidth(String text, TextStyle style) {
   final painter = TextPainter(
@@ -67,8 +54,10 @@ void handleFileTap(
   final isVideo = videoFileTypes.contains(fileType);
   final isImage = imageFileTypes.contains(fileType);
   final isPdf = fileType == '.pdf';
+  final isDocx = docxFileTypes.contains(fileType);
 
-  final isSupported = isText || isAudio || isVideo || isImage || isPdf;
+  final isSupported =
+      isText || isAudio || isVideo || isImage || isPdf || isDocx;
 
   if (isSupported) {
     // Add to recent once (only for supported types)
@@ -133,6 +122,21 @@ void handleFileTap(
     return;
   }
 
+  if (isDocx) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder:
+            (_) => DocxPreview(
+              rootContext: context,
+              filePath: fullPath,
+              state: state,
+            ),
+      ),
+    );
+    return;
+  }
+
   if (isImage) {
     Navigator.push(
       context,
@@ -157,8 +161,10 @@ void handleTap(
   final isVideo = videoFileTypes.contains(fileType);
   final isImage = imageFileTypes.contains(fileType);
   final isPdf = fileType == '.pdf';
+  final isDocx = docxFileTypes.contains(fileType);
 
-  final isSupported = isText || isAudio || isVideo || isImage || isPdf;
+  final isSupported =
+      isText || isAudio || isVideo || isImage || isPdf || isDocx;
 
   if (isSupported) {
     // Add to recent once (only for supported types)
@@ -200,6 +206,16 @@ void handleTap(
       context,
       MaterialPageRoute(
         builder: (_) => PdfPreview(rootContext: context, filePath: fullPath),
+      ),
+    );
+    return;
+  }
+
+  if (isDocx) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => DocxPreview(rootContext: context, filePath: fullPath),
       ),
     );
     return;

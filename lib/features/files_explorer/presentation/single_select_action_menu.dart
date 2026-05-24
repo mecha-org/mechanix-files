@@ -60,17 +60,14 @@ class SingleSelectActionsMenu extends StatelessWidget {
                       Expanded(
                         child: LayoutBuilder(
                           builder: (context, constraints) {
-                            const textStyle = TextStyle(
-                              fontSize: 20,
-                              color: AppColors.onSurfaceVariant,
-                              fontWeight: FontWeight.w300,
-                            );
+                            final textStyle =
+                                Theme.of(context).textTheme.labelLarge;
 
                             return Text(
                               middleEllipsisString(
                                 fileItem.name,
                                 constraints.maxWidth,
-                                textStyle,
+                                textStyle!,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.clip,

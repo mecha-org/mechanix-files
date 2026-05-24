@@ -257,14 +257,14 @@ class PasteHandler {
                   children: [
                     LayoutBuilder(
                       builder: (context, constraints) {
-                        final fileStyle = confirmationDialogBoldStyle(context);
-                        final suffixStyle = confirmationDialogRegularStyle(
-                          context,
-                        );
+                        final fileStyle =
+                            Theme.of(context).textTheme.headlineLarge;
+                        final suffixStyle =
+                            Theme.of(context).textTheme.titleLarge;
                         const suffix = ' already exists';
 
                         // Measure suffix width
-                        final suffixWidth = textWidth(suffix, suffixStyle);
+                        final suffixWidth = textWidth(suffix, suffixStyle!);
 
                         // Remaining width for filename
                         final availableWidth = (constraints.maxWidth -
@@ -274,7 +274,7 @@ class PasteHandler {
                         final truncatedName = middleEllipsisString(
                           conflict.fileName,
                           availableWidth,
-                          fileStyle,
+                          fileStyle!,
                         );
 
                         return RichText(
@@ -291,11 +291,7 @@ class PasteHandler {
                     const SizedBox(height: 8),
                     Text(
                       AppLocalizations.of(context)!.replaceQuestion,
-                      style: const TextStyle(
-                        color: AppColors.onSurface,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w400,
-                      ),
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     const SizedBox(height: 16),
                     Row(
@@ -404,14 +400,14 @@ class ConflictResolutionBottomSheet extends StatelessWidget {
               LayoutBuilder(
                 builder: (context, constraints) {
                   const suffixText = ' already exists';
-                  final suffixStyle = confirmationDialogRegularStyle(context);
-                  final nameStyle = confirmationDialogBoldStyle(context);
-                  final suffixWidth = textWidth(suffixText, suffixStyle);
+                  final suffixStyle = Theme.of(context).textTheme.titleLarge;
+                  final nameStyle = Theme.of(context).textTheme.headlineLarge;
+                  final suffixWidth = textWidth(suffixText, suffixStyle!);
                   final availableForName = constraints.maxWidth - suffixWidth;
                   final truncatedName = middleEllipsisString(
                     fileName,
                     availableForName,
-                    nameStyle,
+                    nameStyle!,
                   );
 
                   return RichText(
@@ -429,11 +425,7 @@ class ConflictResolutionBottomSheet extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 AppLocalizations.of(context)!.replaceQuestion,
-                style: const TextStyle(
-                  color: AppColors.onSurface,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                ),
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(height: 16),
               Row(

@@ -1,8 +1,10 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:io' hide File, Directory, FileSystemEntity, FileSystemException;
 
-import 'package:files/core/theme/app_theme.dart';
+import 'package:file/file.dart';
+import 'package:files/core/utils/app_file_system.dart';
 import 'package:files/core/constants/icons.dart';
+import 'package:files/core/theme/app_theme.dart';
 import 'package:files/core/widgets/bottom_bar/bottom_bar.dart';
 import 'package:files/core/widgets/custom_icon_button.dart';
 import 'package:files/core/widgets/notification/custom_notification.dart';
@@ -38,7 +40,7 @@ class TrashPageState extends State<TrashPage> {
   }
 
   Future<void> _init() async {
-    await TrashPathsService.init();
+    await TrashPathsService.init(AppFileSystem.instance);
 
     currentPath = TrashPathsService.trashFilesDir.path;
 
@@ -49,7 +51,7 @@ class TrashPageState extends State<TrashPage> {
 
   Future<void> _loadTrashDirectory() async {
     await controller.openDirectory(
-      Directory(TrashPathsService.trashFilesDir.path),
+      AppFileSystem.instance.directory(TrashPathsService.trashFilesDir.path),
     );
 
     if (!mounted) return;

@@ -1,5 +1,7 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:io' hide File, Directory, FileSystemEntity, FileSystemException;
+import 'package:file/file.dart';
+import 'package:files/core/utils/app_file_system.dart';
 import 'package:files/core/utils/app_logger.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path/path.dart' as p;
@@ -105,7 +107,7 @@ class FileManagerController {
   // void sortBy(SortBy sortType) => _sort.value = sortType;
 
   /// Get current Directory.
-  Directory get getCurrentDirectory => Directory(_path.value);
+  Directory get getCurrentDirectory => AppFileSystem.instance.directory(_path.value);
 
   /// Get current path, similar to [getCurrentDirectory].
   String get getCurrentPath => _path.value;
@@ -119,7 +121,7 @@ class FileManagerController {
   Future<bool> isRootDirectory() async {
     final List<Directory> storageList = (await getStorageList());
     return (storageList
-        .where((element) => element.path == Directory(_path.value).path)
+        .where((element) => element.path == AppFileSystem.instance.directory(_path.value).path)
         .isNotEmpty);
   }
 
@@ -129,9 +131,9 @@ class FileManagerController {
     if (Platform.isLinux) {
       final home = Platform.environment['HOME'];
       if (home != null && home.isNotEmpty) {
-        return [Directory(home)];
+        return [AppFileSystem.instance.directory(home)];
       }
-      return [Directory('/')]; // final fallback
+      return [AppFileSystem.instance.directory('/')]; // final fallback
     }
     return [];
   }
@@ -139,7 +141,7 @@ class FileManagerController {
   /// Jumps to the parent directory of currently opened directory if the parent is accessible.
   Future<void> goToParentDirectory() async {
     if (!(await isRootDirectory()))
-      openDirectory(Directory(_path.value).parent);
+      openDirectory(AppFileSystem.instance.directory(_path.value).parent);
   }
 
   /// Open a directory and initialize pagination
@@ -173,7 +175,7 @@ class FileManagerController {
     _isLoadingChunk = true;
 
     try {
-      final Directory dir = Directory(_path.value);
+      final Directory dir = AppFileSystem.instance.directory(_path.value);
       final int start = (_currentPage - 1) * _pageSize;
 
       // Get next page of items
@@ -377,7 +379,7 @@ class FileManagerController {
   }
 
   Future<void> _searchRecursively(String query) async {
-    final dir = Directory(_path.value);
+    final dir = AppFileSystem.instance.directory(_path.value);
     if (!dir.existsSync()) return;
 
     final List<FileSystemEntity> results = [];
@@ -402,7 +404,7 @@ class FileManagerController {
 
     if (currentPath.isEmpty) return;
 
-    final dir = Directory(currentPath);
+    final dir = AppFileSystem.instance.directory(currentPath);
     if (!dir.existsSync()) return;
 
     await openDirectory(dir);

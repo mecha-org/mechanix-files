@@ -39,6 +39,7 @@ class _VideoPreviewState extends State<VideoPreview> {
   double _dragValue = 0.0;
 
   late VoidCallback _videoListener;
+  bool _hasError = false;
 
   @override
   void initState() {
@@ -48,22 +49,29 @@ class _VideoPreviewState extends State<VideoPreview> {
   }
 
   Future<void> _initVideo() async {
-    controller = VideoPlayerController.file(File(widget.filePath))
-      ..setLooping(false);
+    try {
+      controller = VideoPlayerController.file(File(widget.filePath))
+        ..setLooping(false);
 
-    await controller.initialize();
+      await controller.initialize();
 
-    if (!mounted) return;
+      if (!mounted) return;
 
-    setState(() {});
+      setState(() {});
 
-    _videoListener = _onVideoUpdate;
-    controller.addListener(_videoListener);
+      _videoListener = _onVideoUpdate;
+      controller.addListener(_videoListener);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _hasError = true;
+      });
+    }
   }
 
   void _onVideoUpdate() {
     if (!mounted || _isDisposed) return;
-    if (!controller.value.isInitialized) return;
+    if (_hasError || !controller.value.isInitialized) return;
 
     setState(() {});
   }
@@ -72,10 +80,12 @@ class _VideoPreviewState extends State<VideoPreview> {
   void dispose() {
     _isDisposed = true;
 
-    /// Remove listener before disposing controller
-    controller.removeListener(_videoListener);
-    controller.pause();
-    controller.dispose();
+    if (!_hasError) {
+      /// Remove listener before disposing controller
+      controller.removeListener(_videoListener);
+      controller.pause();
+      controller.dispose();
+    }
 
     super.dispose();
   }
@@ -91,6 +101,28 @@ class _VideoPreviewState extends State<VideoPreview> {
 
   @override
   Widget build(BuildContext context) {
+    if (_hasError) {
+      return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.black,
+          elevation: 0,
+          title: Text(widget.filePath.split('/').last),
+        ),
+        body: Center(
+          child: Text(
+            'Error loading video preview',
+            style: Theme.of(context).textTheme.labelSmall,
+          ),
+        ),
+        bottomNavigationBar: PreviewActionBar(
+          path: widget.filePath,
+          state: widget.state,
+          rootContext: widget.rootContext,
+        ),
+      );
+    }
+
     /// Show loader until video initializes
     if (!controller.value.isInitialized) {
       return const Center(child: CircularProgressIndicator());

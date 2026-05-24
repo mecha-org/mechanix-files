@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:files/core/constants/hive_tables.dart';
 import 'package:files/core/constants/app_limits.dart';
 import 'package:files/features/recents/data/models/recent_files.dart';
 import 'package:files/features/recents/data/repositories/recent_files_repository_impl.dart';
@@ -23,19 +22,19 @@ void main() {
 
     Hive.init(tempDir.path);
 
-    await Hive.openBox<RecentFile>(HiveTables.recentFilesTable);
+    await Hive.openBox<RecentFile>(recentFilesTable);
 
     repo = RecentFilesRepositoryImpl();
   });
 
   tearDown(() async {
-    await Hive.box<RecentFile>(HiveTables.recentFilesTable).clear();
+    await Hive.box<RecentFile>(recentFilesTable).clear();
     await Hive.deleteFromDisk();
   });
 
   group('RecentFilesRepositoryImpl', () {
     test('returns recent files sorted by openedAt desc', () async {
-      final box = Hive.box<RecentFile>(HiveTables.recentFilesTable);
+      final box = Hive.box<RecentFile>(recentFilesTable);
 
       final now = DateTime.now();
 
@@ -57,7 +56,7 @@ void main() {
     test('adds new recent file', () async {
       await repo.addRecentFile('/new.txt');
 
-      final box = Hive.box<RecentFile>(HiveTables.recentFilesTable);
+      final box = Hive.box<RecentFile>(recentFilesTable);
 
       final exists = box.values.any((e) => e.path == '/new.txt');
 
@@ -65,7 +64,7 @@ void main() {
     });
 
     test('replaces existing recent file entry', () async {
-      final box = Hive.box<RecentFile>(HiveTables.recentFilesTable);
+      final box = Hive.box<RecentFile>(recentFilesTable);
 
       await box.add(RecentFile(path: '/dup.txt', openedAt: DateTime.now()));
 
@@ -77,7 +76,7 @@ void main() {
     });
 
     test('enforces recent files limit', () async {
-      final box = Hive.box<RecentFile>(HiveTables.recentFilesTable);
+      final box = Hive.box<RecentFile>(recentFilesTable);
 
       for (int i = 0; i < AppLimits.recentFilesCount + 3; i++) {
         await repo.addRecentFile('/file$i.txt');
@@ -100,7 +99,7 @@ void main() {
       await repo.addRecentFile('/same.txt');
       await repo.addRecentFile('/same.txt');
 
-      final box = Hive.box<RecentFile>(HiveTables.recentFilesTable);
+      final box = Hive.box<RecentFile>(recentFilesTable);
 
       final count = box.values.where((e) => e.path == '/same.txt').length;
 
