@@ -38,13 +38,14 @@ class PasteDestinationBottomBar extends StatelessWidget {
     return BottomBar(
       leading: CustomIconButton.asset(
         assetPath: FileIcons.back,
-        onPressed: onBack,
+        enabled: false,
+        onPressed: () {},
       ),
 
       trailing: [
         CustomIconButton.asset(
           assetPath: FileIcons.check,
-          onPressed: onConfirm,
+          onPressed: () {},
           enabled: false,
         ),
         CustomIconButton.asset(
