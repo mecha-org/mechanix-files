@@ -126,6 +126,12 @@
     }
   },
   "movedItemToFolder": "Moved {item} to {folder}",
+  "@movedItemToFolder": {
+    "placeholders": {
+      "item": {},
+      "folder":{}
+    }
+  },
   "replaceQuestion": "Would you like to replace?",
   "searchHint": "Search here"
 }

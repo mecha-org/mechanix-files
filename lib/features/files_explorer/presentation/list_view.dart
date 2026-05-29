@@ -92,22 +92,21 @@ class ExplorerListSection extends StatelessWidget {
                           vertical: 1,
                         ), // spacing between items
                         child: GestureDetector(
-                          onSecondaryTap: () {
-                            showSingleSelectActionsSheet(
-                              context,
-                              path: entity.path,
-                              controller: controller,
-                              state: state!,
-                            );
-                          },
-                          onLongPress: () {
-                            showSingleSelectActionsSheet(
-                              context,
-                              path: entity.path,
-                              controller: controller,
-                              state: state!,
-                            );
-                          },
+                          onSecondaryTap:
+                              () => _handleContextMenu(
+                                context,
+                                entity,
+                                state,
+                                isSearching,
+                              ),
+
+                          onLongPress:
+                              () => _handleContextMenu(
+                                context,
+                                entity,
+                                state,
+                                isSearching,
+                              ),
                           child: Container(
                             decoration: BoxDecoration(
                               color:
@@ -218,6 +217,26 @@ class ExplorerListSection extends StatelessWidget {
           },
         );
       },
+    );
+  }
+
+  void _handleContextMenu(
+    BuildContext context,
+    FileSystemEntity entity,
+    FileExplorerPageState? state,
+    bool isSearching,
+  ) {
+    if (isSearching) {
+      state?.clearSearch();
+    }
+
+    if (state == null) return;
+
+    showSingleSelectActionsSheet(
+      context,
+      path: entity.path,
+      controller: controller,
+      state: state,
     );
   }
 }

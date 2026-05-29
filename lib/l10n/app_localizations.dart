@@ -458,7 +458,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Moved {item} to {folder}'**
-  String movedItemToFolder(Object folder, Object item);
+  String movedItemToFolder(Object item, Object folder);
 
   /// No description provided for @replaceQuestion.
   ///

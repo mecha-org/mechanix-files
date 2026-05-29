@@ -19,6 +19,13 @@ class AppTheme {
       fontFamily: 'Sora',
       primaryColor: AppColors.onSurface,
       scaffoldBackgroundColor: AppColors.background,
+
+      /// REMOVE MATERIAL RIPPLE EFFECTS
+      splashFactory: NoSplash.splashFactory,
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
+      focusColor: Colors.transparent,
+
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,

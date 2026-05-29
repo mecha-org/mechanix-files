@@ -227,7 +227,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String movedItemToFolder(Object folder, Object item) {
+  String movedItemToFolder(Object item, Object folder) {
     return 'Moved $item to $folder';
   }
 
