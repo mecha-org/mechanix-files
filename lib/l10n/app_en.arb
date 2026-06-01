@@ -1,0 +1,137 @@
+{
+  "filesHomeTitle" : "Locations",
+  "downloads": "Downloads",
+  "homeDirectory": "Home directory",
+  "home" : "Home",
+  "documents" : "Documents",
+  "recent": "Recent",
+  "hardDriveTitle": "Hard Drive",
+  "root" : "Root ( / )",
+  "fileInfo" : "Info",
+  "rename" : "Rename",
+  "select" : "Select",
+  "newFolder" : "New Folder",
+  "hideFiles" : "Hide hidden files",
+  "showFiles" : "Show hidden files",  
+  "type" : "Type",
+  "size" : "Size",
+  "modified" : "Modified",
+  "accessed" : "Accessed",
+  "changed" : "Changed",
+  "readable" : "Readable",
+  "writable" : "Writable",
+  "hidden" : "Hidden",
+  "emptySearchResultsMessage": "No matching results found",
+  "emptyFolderMessage": "This folder is empty",
+  "selectAll" : "Select all",
+  "copyTo" : "Copy to",
+  "moveTo" : "Move to",
+  "copy" : "Copy",
+  "move" : "Move",
+  "moveToTrash" : "Move to trash",
+  "newFolderWithSingleItem" : "New folder with this item",
+  "paste" : "Paste here",
+  "cancel" : "Cancel",
+  "replace" : "Replace",
+  "skip" : "Skip",
+  "skipAll" : "Skip all",
+  "cannotMoveFileOverItself": "You cannot move a file over itself",
+  "moveItems": "{count, plural, =1{Move 1 item} other{Move {count} items}}",
+  "@moveItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "copyItems": "{count, plural, =1{Copy 1 item} other{Copy {count} items}}",
+  "@copyItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pasteInNewFolder": "{count, plural, =1{New folder with '1 item'} other{New folder with '{count} items'}}",
+  "@pasteInNewFolder": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trash" : "Trash",
+  "moveToTrash": "Move to Trash",
+  "moveItemToTrashConfirmation": "Move this item to Trash?",
+  "moveItemsToTrashConfirmation": "Move selected items to Trash?",
+  "enterPdfPassword" : "Enter PDF password",
+  "enterPassword" : "Enter password",
+  "passwordError" : "Password can not be empty",
+  "fileLoadError" : "Failed to load file",
+  "emptyRecentFolderMessage" : "No recent files",
+  "unsupportedFileTypeErrorMessage" : "Unsupported file type",
+  "unsupportedFileTypeErrorMessageWithType": "Files of type \"{fileType}\" are not supported",
+  "@unsupportedFileTypeErrorMessageWithType": {
+    "placeholders": {
+      "fileType": {
+        "type": "String"
+      }
+    }
+  },
+   "noSelection": "No selection",
+  "selectedItems": "{count} Selected",
+  "@selectedItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "copyMoveSingleItem": "{action} 1 item",
+  "@copyMoveSingleItem": {
+    "placeholders": {
+      "action": {}
+    }
+  },
+  "copyMoveMultipleItems": "{action} {count} items",
+  "@copyMoveMultipleItems": {
+    "placeholders": {
+      "action": {},
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "now": "Now",
+  "errorMessage": "Error: {error}",
+  "@errorMessage": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "movedItemsToFolder": "Moved {count} item{plural} to {folder}",
+  "@movedItemsToFolder": {
+    "placeholders": {
+      "count": {},
+      "plural": {},
+      "folder": {}
+    }
+  },
+  "enterName": "Enter name",
+  "nameCannotBeEmpty": "Name cannot be empty",
+  "renameItem": "Rename '{name}'",
+  "@renameItem": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "movedItemToFolder": "Moved {item} to {folder}",
+  "@movedItemToFolder": {
+    "placeholders": {
+      "item": {},
+      "folder":{}
+    }
+  },
+  "replaceQuestion": "Would you like to replace?",
+  "searchHint": "Search here"
+}
