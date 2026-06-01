@@ -471,6 +471,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search here'**
   String get searchHint;
+
+  /// No description provided for @noItemsMoved.
+  ///
+  /// In en, this message translates to:
+  /// **'No items were moved'**
+  String get noItemsMoved;
+
+  /// No description provided for @searchResults.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No items} =1{1 item} other{{count} items}}'**
+  String searchResults(int count);
 }
 
 class _AppLocalizationsDelegate

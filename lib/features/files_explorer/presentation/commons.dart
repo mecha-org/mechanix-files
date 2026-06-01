@@ -1,7 +1,7 @@
 import 'dart:io' as io;
 import 'dart:ui' as ui;
 
-import 'package:files/core/widgets/notification/custom_notification.dart';
+import 'package:files/core/widgets/toast/custom_app_toast.dart';
 import 'package:files/features/files_explorer/controllers/file_manager_controller.dart';
 import 'package:files/features/files_explorer/presentation/file_explorer.dart';
 import 'package:files/features/files_home/data/models/file_item.dart';
@@ -63,7 +63,7 @@ void handleFileTap(
     // Add to recent once (only for supported types)
     context.read<RecentFilesBloc>().add(AddToRecentFiles(fullPath));
   } else {
-    showUnsupportedFileNotification(context, fileType);
+    showUnsupportedFileToastMessage(context, fileType);
     return;
   }
 
@@ -170,7 +170,7 @@ void handleTap(
     // Add to recent once (only for supported types)
     context.read<RecentFilesBloc>().add(AddToRecentFiles(fullPath));
   } else {
-    showUnsupportedFileNotification(context, fileType);
+    showUnsupportedFileToastMessage(context, fileType);
     return;
   }
   if (isText) {
@@ -230,10 +230,10 @@ void handleTap(
   }
 }
 
-void showUnsupportedFileNotification(BuildContext context, String fileType) {
-  CustomNotification.show(
+void showUnsupportedFileToastMessage(BuildContext context, String fileType) {
+  CustomAppToast.show(
     context: context,
-    type: NotificationType.error,
+    type: ToastType.error,
     message:
         fileType.isEmpty
             ? AppLocalizations.of(context)!.unsupportedFileTypeErrorMessage

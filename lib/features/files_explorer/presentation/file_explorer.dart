@@ -7,7 +7,7 @@ import 'package:files/core/constants/icons.dart';
 import 'package:files/core/constants/path_constants.dart';
 import 'package:files/core/utils/commons.dart';
 import 'package:files/core/widgets/custom_icon_button.dart';
-import 'package:files/core/widgets/notification/custom_notification.dart';
+import 'package:files/core/widgets/toast/custom_app_toast.dart';
 import 'package:files/features/files_explorer/blocs/file_boc.dart';
 import 'package:files/features/files_explorer/blocs/file_event.dart';
 import 'package:files/features/files_explorer/blocs/file_state.dart';
@@ -223,12 +223,12 @@ class FileExplorerPageState extends State<FileExplorerPage> {
               (previous, current) =>
                   previous.error != current.error && current.error != null,
           listener: (context, state) {
-            CustomNotification.show(
+            CustomAppToast.show(
               context: context,
               message: AppLocalizations.of(
                 context,
               )!.errorMessage(state.error ?? ''),
-              type: NotificationType.error,
+              type: ToastType.error,
             );
           },
         ),
@@ -263,15 +263,23 @@ class FileExplorerPageState extends State<FileExplorerPage> {
 
               final folderName = p.basename(state.conflictDestinationPath);
 
-              CustomNotification.show(
-                context: context,
-                type: NotificationType.success,
-                message: AppLocalizations.of(context)!.movedItemsToFolder(
-                  totalMovedCount,
-                  totalMovedCount > 1 ? 's' : '',
-                  folderName,
-                ),
-              );
+              if (totalMovedCount > 0) {
+                CustomAppToast.show(
+                  context: context,
+                  type: ToastType.success,
+                  message: AppLocalizations.of(context)!.movedItemsToFolder(
+                    totalMovedCount,
+                    totalMovedCount > 1 ? 's' : '',
+                    folderName,
+                  ),
+                );
+              } else {
+                CustomAppToast.show(
+                  context: context,
+                  type: ToastType.info,
+                  message: AppLocalizations.of(context)!.noItemsMoved,
+                );
+              }
 
               context.read<FilesBloc>().add(CancelMoveMode());
 
@@ -343,20 +351,29 @@ class FileExplorerPageState extends State<FileExplorerPage> {
                   return ValueListenableBuilder<bool>(
                     valueListenable: selectionModeNotifier,
                     builder: (context, isSelectionMode, _) {
-                      return ExplorerBreadcrumbs(
-                        isCopyMode: mode.isCopy,
-                        isMoveMode: mode.isMove,
-                        copiedItemCount: mode.copiedItemCount,
-                        movedItemCount: mode.movedItemCount,
+                      return ValueListenableBuilder<List<FileSystemEntity>>(
+                        valueListenable: controller.paginatedEntities,
+                        builder: (context, entities, _) {
+                          return ExplorerBreadcrumbs(
+                            isCopyMode: mode.isCopy,
+                            isMoveMode: mode.isMove,
+                            copiedItemCount: mode.copiedItemCount,
+                            movedItemCount: mode.movedItemCount,
 
-                        parentContext: context,
-                        currentPath: currentPath,
-                        controller: controller,
-                        scrollController: breadcrumbScrollController,
+                            parentContext: context,
+                            currentPath: currentPath,
+                            controller: controller,
+                            scrollController: breadcrumbScrollController,
 
-                        /// selection
-                        selectionCount: selectedPaths.length,
-                        isSelectionMode: isSelectionMode,
+                            /// selection
+                            selectionCount: selectedPaths.length,
+                            isSelectionMode: isSelectionMode,
+
+                            /// search mode
+                            isSearching: isSearching,
+                            searchCount: entities.length,
+                          );
+                        },
                       );
                     },
                   );

@@ -1,13 +1,13 @@
 import 'package:files/core/theme/app_theme.dart';
-import 'package:files/core/widgets/notification/custom_notification.dart';
+import 'package:files/core/widgets/toast/custom_app_toast.dart';
 import 'package:flutter/material.dart';
 
-class SimpleNotificationView extends StatefulWidget {
+class ToastView extends StatefulWidget {
   final String message;
-  final NotificationType type;
+  final ToastType type;
   final VoidCallback onClose;
 
-  const SimpleNotificationView({
+  const ToastView({
     super.key,
     required this.message,
     required this.type,
@@ -15,10 +15,10 @@ class SimpleNotificationView extends StatefulWidget {
   });
 
   @override
-  State<SimpleNotificationView> createState() => _SimpleNotificationViewState();
+  State<ToastView> createState() => _ToastViewState();
 }
 
-class _SimpleNotificationViewState extends State<SimpleNotificationView>
+class _ToastViewState extends State<ToastView>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<Offset> _slide;
@@ -51,22 +51,22 @@ class _SimpleNotificationViewState extends State<SimpleNotificationView>
 
   Color _iconColor() {
     switch (widget.type) {
-      case NotificationType.success:
+      case ToastType.success:
         return Colors.green;
-      case NotificationType.error:
+      case ToastType.error:
         return Colors.red;
-      case NotificationType.info:
+      case ToastType.info:
         return Colors.blue;
     }
   }
 
   IconData _icon() {
     switch (widget.type) {
-      case NotificationType.success:
+      case ToastType.success:
         return Icons.check_circle;
-      case NotificationType.error:
+      case ToastType.error:
         return Icons.error;
-      case NotificationType.info:
+      case ToastType.info:
         return Icons.info;
     }
   }

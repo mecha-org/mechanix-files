@@ -4,7 +4,7 @@ import 'package:files/core/theme/app_theme.dart';
 import 'package:files/core/utils/app_logger.dart';
 import 'package:files/core/widgets/custom_button.dart';
 import 'package:files/core/widgets/middle_ellipsis_text.dart';
-import 'package:files/core/widgets/notification/custom_notification.dart';
+import 'package:files/core/widgets/toast/custom_app_toast.dart';
 import 'package:files/features/files_explorer/blocs/file_boc.dart';
 import 'package:files/features/files_explorer/blocs/file_event.dart';
 import 'package:files/features/files_explorer/blocs/file_state.dart';
@@ -59,13 +59,21 @@ class PasteHandler {
 
       if (!context.mounted) return;
 
-      CustomNotification.show(
-        context: context,
-        type: NotificationType.success,
-        message: AppLocalizations.of(
-          context,
-        )!.movedItemToFolder(itemName, folderName),
-      );
+      if (totalMovedCount > 0) {
+        CustomAppToast.show(
+          context: context,
+          type: ToastType.success,
+          message: AppLocalizations.of(
+            context,
+          )!.movedItemToFolder(itemName, folderName),
+        );
+      } else {
+        CustomAppToast.show(
+          context: context,
+          type: ToastType.info,
+          message: AppLocalizations.of(context)!.noItemsMoved,
+        );
+      }
 
       return;
     }
@@ -107,9 +115,9 @@ class PasteHandler {
       bloc.add(CancelMoveMode());
       reload();
 
-      CustomNotification.show(
+      CustomAppToast.show(
         context: context,
-        type: NotificationType.success,
+        type: ToastType.success,
         message: AppLocalizations.of(context)!.movedItemsToFolder(
           movePathCount,
           movePathCount > 1 ? 's' : '',

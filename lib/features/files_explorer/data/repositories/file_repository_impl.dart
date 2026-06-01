@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:file/file.dart';
+import 'package:files/core/constants/app_constants.dart';
 import 'package:files/core/utils/app_file_system.dart';
 import 'package:files/core/utils/app_logger.dart';
 import 'package:files/features/files_explorer/data/models/conflict_resolution_strategy.dart';
@@ -181,7 +182,6 @@ class FileRepositoryImpl implements FileRepository {
     String rootPath,
     String query,
   ) async {
-    int maxDepth = 2;
     final dir = _fs.directory(rootPath);
     final q = query.toLowerCase();
     final results = <FileSystemEntity>[];
@@ -195,7 +195,7 @@ class FileRepositoryImpl implements FileRepository {
       final currentDir = current.key;
       final depth = current.value;
 
-      if (depth > maxDepth) continue;
+      if (depth > AppConstants.searchMaxDepth) continue;
 
       try {
         await for (final entity in currentDir.list(followLinks: false)) {
