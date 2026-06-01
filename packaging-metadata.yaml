@@ -1,0 +1,9 @@
+name: packaging-metadata
+version: 1.0.0
+summary: Metadata for Mechanix Files app packaging
+applications:
+  - name: files
+    folder: .
+    binary: files
+    description: "Mechanix Files application"
+    maintainer: "Yogita Hiray <yogitah@mechasystems.com>"
