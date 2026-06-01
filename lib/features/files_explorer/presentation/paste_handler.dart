@@ -131,6 +131,7 @@ class PasteHandler {
     /// ---------------- COPY FLOW ----------------
     if (state.isCopyMode) {
       final completer = Completer<void>();
+      final copyPathCount = state.copiedPaths.length;
 
       bloc.add(
         Copy(
@@ -153,6 +154,16 @@ class PasteHandler {
 
       explorerState?.closePanel();
       explorerState?.modeNotifier.value = ExplorerMode.browsing;
+
+      CustomAppToast.show(
+        context: context,
+        type: ToastType.success,
+        message: AppLocalizations.of(context)!.copiedItemsToFolder(
+          copyPathCount,
+          copyPathCount > 1 ? 's' : '',
+          folderName,
+        ),
+      );
 
       return;
     }
@@ -445,6 +456,9 @@ class ConflictResolutionBottomSheet extends StatelessWidget {
                       textColor: AppColors.onSurface,
                       borderRadius: 0,
                       onPressed: () {
+                        if (totalCopiedCount != null) {
+                          totalCopiedCount = totalCopiedCount! - 1;
+                        }
                         context.read<FilesBloc>().add(
                           ContinueCopyWithConflictResolution(
                             sourcePaths: conflictingPaths,

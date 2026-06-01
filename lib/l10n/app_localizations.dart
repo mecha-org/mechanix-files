@@ -478,6 +478,24 @@ abstract class AppLocalizations {
   /// **'No items were moved'**
   String get noItemsMoved;
 
+  /// No description provided for @copiedItemsToFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied {count} item{plural} to {folder}'**
+  String copiedItemsToFolder(Object count, Object plural, Object folder);
+
+  /// No description provided for @copiedItemToFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied {item} to {folder}'**
+  String copiedItemToFolder(Object item, Object folder);
+
+  /// No description provided for @noItemsCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'No items were copied'**
+  String get noItemsCopied;
+
   /// No description provided for @searchResults.
   ///
   /// In en, this message translates to:

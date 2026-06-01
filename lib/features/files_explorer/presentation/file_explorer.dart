@@ -37,6 +37,7 @@ enum ExplorerMode {
 }
 
 var totalMovedCount = 0;
+int? totalCopiedCount;
 
 class FileExplorerPage extends StatefulWidget {
   final String? startPath;
@@ -291,11 +292,15 @@ class FileExplorerPageState extends State<FileExplorerPage> {
         //Copy: Show conflict resolution dialog
         BlocListener<FilesBloc, FilesState>(
           listenWhen:
-              (prev, curr) => prev.conflictingPaths != curr.conflictingPaths,
+              (prev, curr) =>
+                  prev.conflictingPaths != curr.conflictingPaths ||
+                  prev.isCopyMode != curr.isCopyMode,
           listener: (context, state) {
             if (!state.loading &&
                 state.conflictingPaths.isNotEmpty &&
                 state.isCopyMode) {
+              totalCopiedCount ??= state.copiedPaths.length;
+
               showModalBottomSheet<ConflictResolutionStrategy>(
                 context: context,
                 useRootNavigator: true,
@@ -311,6 +316,39 @@ class FileExplorerPageState extends State<FileExplorerPage> {
                   );
                 },
               );
+            } else if (!state.loading &&
+                state.conflictingPaths.isEmpty &&
+                !state.isCopyMode &&
+                totalCopiedCount != null) {
+              final folderName = p.basename(
+                state.conflictDestinationPath.isNotEmpty
+                    ? state.conflictDestinationPath
+                    : currentPath,
+              );
+
+              if (totalCopiedCount! > 0) {
+                CustomAppToast.show(
+                  context: context,
+                  type: ToastType.success,
+                  message: AppLocalizations.of(context)!.copiedItemsToFolder(
+                    totalCopiedCount!,
+                    totalCopiedCount! > 1 ? 's' : '',
+                    folderName,
+                  ),
+                );
+              } else {
+                CustomAppToast.show(
+                  context: context,
+                  type: ToastType.info,
+                  message: AppLocalizations.of(context)!.noItemsCopied,
+                );
+              }
+
+              context.read<FilesBloc>().add(CancelCopyMode());
+              totalCopiedCount = null;
+              closePanel();
+              modeNotifier.value = ExplorerMode.browsing;
+              reload();
             }
           },
         ),

@@ -241,6 +241,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noItemsMoved => 'No items were moved';
 
   @override
+  String copiedItemsToFolder(Object count, Object plural, Object folder) {
+    return 'Copied $count item$plural to $folder';
+  }
+
+  @override
+  String copiedItemToFolder(Object item, Object folder) {
+    return 'Copied $item to $folder';
+  }
+
+  @override
+  String get noItemsCopied => 'No items were copied';
+
+  @override
   String searchResults(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
