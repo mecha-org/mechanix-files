@@ -433,8 +433,8 @@ abstract class AppLocalizations {
   /// No description provided for @movedItemsToFolder.
   ///
   /// In en, this message translates to:
-  /// **'Moved {count} item{plural} to {folder}'**
-  String movedItemsToFolder(Object count, Object plural, Object folder);
+  /// **'{count, plural, =1{Moved 1 item to {folderName}} other{Moved {count} items to {folderName}}}'**
+  String movedItemsToFolder(int count, String folderName);
 
   /// No description provided for @enterName.
   ///
@@ -481,8 +481,8 @@ abstract class AppLocalizations {
   /// No description provided for @copiedItemsToFolder.
   ///
   /// In en, this message translates to:
-  /// **'Copied {count} item{plural} to {folder}'**
-  String copiedItemsToFolder(Object count, Object plural, Object folder);
+  /// **'{count, plural, =1{Copied 1 item to {folderName}} other{Copied {count} items to {folderName}}}'**
+  String copiedItemsToFolder(int count, String folderName);
 
   /// No description provided for @copiedItemToFolder.
   ///

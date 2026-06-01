@@ -118,11 +118,9 @@ class PasteHandler {
       CustomAppToast.show(
         context: context,
         type: ToastType.success,
-        message: AppLocalizations.of(context)!.movedItemsToFolder(
-          movePathCount,
-          movePathCount > 1 ? 's' : '',
-          folderName,
-        ),
+        message: AppLocalizations.of(
+          context,
+        )!.movedItemsToFolder(movePathCount, folderName),
       );
 
       return;
@@ -158,11 +156,9 @@ class PasteHandler {
       CustomAppToast.show(
         context: context,
         type: ToastType.success,
-        message: AppLocalizations.of(context)!.copiedItemsToFolder(
-          copyPathCount,
-          copyPathCount > 1 ? 's' : '',
-          folderName,
-        ),
+        message: AppLocalizations.of(
+          context,
+        )!.copiedItemsToFolder(copyPathCount, folderName),
       );
 
       return;
@@ -456,9 +452,7 @@ class ConflictResolutionBottomSheet extends StatelessWidget {
                       textColor: AppColors.onSurface,
                       borderRadius: 0,
                       onPressed: () {
-                        if (totalCopiedCount != null) {
-                          totalCopiedCount = totalCopiedCount! - 1;
-                        }
+                        totalCopiedCount = totalCopiedCount! - 1;
                         context.read<FilesBloc>().add(
                           ContinueCopyWithConflictResolution(
                             sourcePaths: conflictingPaths,

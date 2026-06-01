@@ -211,8 +211,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String movedItemsToFolder(Object count, Object plural, Object folder) {
-    return 'Moved $count item$plural to $folder';
+  String movedItemsToFolder(int count, String folderName) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Moved $count items to $folderName',
+      one: 'Moved 1 item to $folderName',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -241,8 +247,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noItemsMoved => 'No items were moved';
 
   @override
-  String copiedItemsToFolder(Object count, Object plural, Object folder) {
-    return 'Copied $count item$plural to $folder';
+  String copiedItemsToFolder(int count, String folderName) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Copied $count items to $folderName',
+      one: 'Copied 1 item to $folderName',
+    );
+    return '$_temp0';
   }
 
   @override

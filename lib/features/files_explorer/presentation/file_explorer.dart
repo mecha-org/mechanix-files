@@ -268,11 +268,9 @@ class FileExplorerPageState extends State<FileExplorerPage> {
                 CustomAppToast.show(
                   context: context,
                   type: ToastType.success,
-                  message: AppLocalizations.of(context)!.movedItemsToFolder(
-                    totalMovedCount,
-                    totalMovedCount > 1 ? 's' : '',
-                    folderName,
-                  ),
+                  message: AppLocalizations.of(
+                    context,
+                  )!.movedItemsToFolder(totalMovedCount, folderName),
                 );
               } else {
                 CustomAppToast.show(
@@ -330,11 +328,9 @@ class FileExplorerPageState extends State<FileExplorerPage> {
                 CustomAppToast.show(
                   context: context,
                   type: ToastType.success,
-                  message: AppLocalizations.of(context)!.copiedItemsToFolder(
-                    totalCopiedCount!,
-                    totalCopiedCount! > 1 ? 's' : '',
-                    folderName,
-                  ),
+                  message: AppLocalizations.of(
+                    context,
+                  )!.copiedItemsToFolder(totalCopiedCount!, folderName),
                 );
               } else {
                 CustomAppToast.show(
