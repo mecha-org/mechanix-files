@@ -99,6 +99,7 @@ class _ToastViewState extends State<ToastView>
                     child: Text(
                       widget.message,
                       style: Theme.of(context).textTheme.bodySmall,
+                      maxLines: 2,
                     ),
                   ),
                   GestureDetector(
