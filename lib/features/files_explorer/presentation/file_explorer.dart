@@ -7,7 +7,7 @@ import 'package:files/core/constants/icons.dart';
 import 'package:files/core/constants/path_constants.dart';
 import 'package:files/core/utils/commons.dart';
 import 'package:files/core/widgets/custom_icon_button.dart';
-import 'package:files/core/widgets/notification/custom_notification.dart';
+import 'package:files/core/widgets/toast/custom_app_toast.dart';
 import 'package:files/features/files_explorer/blocs/file_boc.dart';
 import 'package:files/features/files_explorer/blocs/file_event.dart';
 import 'package:files/features/files_explorer/blocs/file_state.dart';
@@ -37,6 +37,7 @@ enum ExplorerMode {
 }
 
 var totalMovedCount = 0;
+int? totalCopiedCount;
 
 class FileExplorerPage extends StatefulWidget {
   final String? startPath;
@@ -223,12 +224,12 @@ class FileExplorerPageState extends State<FileExplorerPage> {
               (previous, current) =>
                   previous.error != current.error && current.error != null,
           listener: (context, state) {
-            CustomNotification.show(
+            CustomAppToast.show(
               context: context,
               message: AppLocalizations.of(
                 context,
               )!.errorMessage(state.error ?? ''),
-              type: NotificationType.error,
+              type: ToastType.error,
             );
           },
         ),
@@ -263,15 +264,21 @@ class FileExplorerPageState extends State<FileExplorerPage> {
 
               final folderName = p.basename(state.conflictDestinationPath);
 
-              CustomNotification.show(
-                context: context,
-                type: NotificationType.success,
-                message: AppLocalizations.of(context)!.movedItemsToFolder(
-                  totalMovedCount,
-                  totalMovedCount > 1 ? 's' : '',
-                  folderName,
-                ),
-              );
+              if (totalMovedCount > 0) {
+                CustomAppToast.show(
+                  context: context,
+                  type: ToastType.success,
+                  message: AppLocalizations.of(
+                    context,
+                  )!.movedItemsToFolder(totalMovedCount, folderName),
+                );
+              } else {
+                CustomAppToast.show(
+                  context: context,
+                  type: ToastType.info,
+                  message: AppLocalizations.of(context)!.noItemsMoved,
+                );
+              }
 
               context.read<FilesBloc>().add(CancelMoveMode());
 
@@ -283,11 +290,15 @@ class FileExplorerPageState extends State<FileExplorerPage> {
         //Copy: Show conflict resolution dialog
         BlocListener<FilesBloc, FilesState>(
           listenWhen:
-              (prev, curr) => prev.conflictingPaths != curr.conflictingPaths,
+              (prev, curr) =>
+                  prev.conflictingPaths != curr.conflictingPaths ||
+                  prev.isCopyMode != curr.isCopyMode,
           listener: (context, state) {
             if (!state.loading &&
                 state.conflictingPaths.isNotEmpty &&
                 state.isCopyMode) {
+              totalCopiedCount ??= state.copiedPaths.length;
+
               showModalBottomSheet<ConflictResolutionStrategy>(
                 context: context,
                 useRootNavigator: true,
@@ -303,6 +314,37 @@ class FileExplorerPageState extends State<FileExplorerPage> {
                   );
                 },
               );
+            } else if (!state.loading &&
+                state.conflictingPaths.isEmpty &&
+                !state.isCopyMode &&
+                totalCopiedCount != null) {
+              final folderName = p.basename(
+                state.conflictDestinationPath.isNotEmpty
+                    ? state.conflictDestinationPath
+                    : currentPath,
+              );
+
+              if (totalCopiedCount! > 0) {
+                CustomAppToast.show(
+                  context: context,
+                  type: ToastType.success,
+                  message: AppLocalizations.of(
+                    context,
+                  )!.copiedItemsToFolder(totalCopiedCount!, folderName),
+                );
+              } else {
+                CustomAppToast.show(
+                  context: context,
+                  type: ToastType.info,
+                  message: AppLocalizations.of(context)!.noItemsCopied,
+                );
+              }
+
+              context.read<FilesBloc>().add(CancelCopyMode());
+              totalCopiedCount = null;
+              closePanel();
+              modeNotifier.value = ExplorerMode.browsing;
+              reload();
             }
           },
         ),
@@ -343,20 +385,29 @@ class FileExplorerPageState extends State<FileExplorerPage> {
                   return ValueListenableBuilder<bool>(
                     valueListenable: selectionModeNotifier,
                     builder: (context, isSelectionMode, _) {
-                      return ExplorerBreadcrumbs(
-                        isCopyMode: mode.isCopy,
-                        isMoveMode: mode.isMove,
-                        copiedItemCount: mode.copiedItemCount,
-                        movedItemCount: mode.movedItemCount,
+                      return ValueListenableBuilder<List<FileSystemEntity>>(
+                        valueListenable: controller.paginatedEntities,
+                        builder: (context, entities, _) {
+                          return ExplorerBreadcrumbs(
+                            isCopyMode: mode.isCopy,
+                            isMoveMode: mode.isMove,
+                            copiedItemCount: mode.copiedItemCount,
+                            movedItemCount: mode.movedItemCount,
 
-                        parentContext: context,
-                        currentPath: currentPath,
-                        controller: controller,
-                        scrollController: breadcrumbScrollController,
+                            parentContext: context,
+                            currentPath: currentPath,
+                            controller: controller,
+                            scrollController: breadcrumbScrollController,
 
-                        /// selection
-                        selectionCount: selectedPaths.length,
-                        isSelectionMode: isSelectionMode,
+                            /// selection
+                            selectionCount: selectedPaths.length,
+                            isSelectionMode: isSelectionMode,
+
+                            /// search mode
+                            isSearching: isSearching,
+                            searchCount: entities.length,
+                          );
+                        },
                       );
                     },
                   );

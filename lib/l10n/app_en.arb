@@ -109,12 +109,15 @@
       "error": {}
     }
   },
-  "movedItemsToFolder": "Moved {count} item{plural} to {folder}",
+  "movedItemsToFolder": "{count, plural, =1{Moved 1 item to {folderName}} other{Moved {count} items to {folderName}}}",
   "@movedItemsToFolder": {
     "placeholders": {
-      "count": {},
-      "plural": {},
-      "folder": {}
+      "count": {
+        "type": "int"
+      },
+      "folderName": {
+        "type": "String"
+      }
     }
   },
   "enterName": "Enter name",
@@ -133,5 +136,33 @@
     }
   },
   "replaceQuestion": "Would you like to replace?",
-  "searchHint": "Search here"
+  "searchHint": "Search here",
+  "noItemsMoved": "No items were moved",
+  "copiedItemsToFolder": "{count, plural, =1{Copied 1 item to {folderName}} other{Copied {count} items to {folderName}}}",
+  "@copiedItemsToFolder": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "folderName": {
+        "type": "String"
+      }
+    }
+  },
+  "copiedItemToFolder": "Copied {item} to {folder}",
+  "@copiedItemToFolder": {
+    "placeholders": {
+      "item": {},
+      "folder":{}
+    }
+  },
+  "noItemsCopied": "No items were copied",
+  "searchResults": "{count, plural, =0{No items} =1{1 item} other{{count} items}}",
+  "@searchResults": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

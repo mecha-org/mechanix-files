@@ -18,6 +18,8 @@ class ExplorerBreadcrumbs extends StatelessWidget {
   final ScrollController scrollController;
   final int selectionCount;
   final bool isSelectionMode;
+  final bool isSearching;
+  final int searchCount;
 
   const ExplorerBreadcrumbs({
     super.key,
@@ -31,6 +33,8 @@ class ExplorerBreadcrumbs extends StatelessWidget {
     required this.scrollController,
     required this.selectionCount,
     required this.isSelectionMode,
+    required this.isSearching,
+    required this.searchCount,
   });
 
   @override
@@ -165,6 +169,14 @@ class ExplorerBreadcrumbs extends StatelessWidget {
           style: Theme.of(context).textTheme.headlineMedium,
         );
       }
+    }
+
+    /// ---------------- SEARCH MODE HEADER ----------------
+    if (isSearching) {
+      return Text(
+        AppLocalizations.of(context)!.searchResults(searchCount),
+        style: Theme.of(context).textTheme.headlineMedium,
+      );
     }
 
     /// ---------------- NORMAL BREADCRUMB ----------------

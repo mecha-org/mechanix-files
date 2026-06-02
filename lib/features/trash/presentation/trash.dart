@@ -1,13 +1,11 @@
 import 'dart:async';
-import 'dart:io' hide File, Directory, FileSystemEntity, FileSystemException;
 
-import 'package:file/file.dart';
 import 'package:files/core/utils/app_file_system.dart';
 import 'package:files/core/constants/icons.dart';
 import 'package:files/core/theme/app_theme.dart';
 import 'package:files/core/widgets/bottom_bar/bottom_bar.dart';
 import 'package:files/core/widgets/custom_icon_button.dart';
-import 'package:files/core/widgets/notification/custom_notification.dart';
+import 'package:files/core/widgets/toast/custom_app_toast.dart';
 import 'package:files/features/files_explorer/blocs/file_boc.dart';
 import 'package:files/features/files_explorer/blocs/file_state.dart';
 import 'package:files/features/files_explorer/controllers/file_manager_controller.dart';
@@ -102,10 +100,10 @@ class TrashPageState extends State<TrashPage> {
               (previous, current) =>
                   previous.error != current.error && current.error != null,
           listener: (context, state) {
-            CustomNotification.show(
+            CustomAppToast.show(
               context: context,
               message: state.error ?? '',
-              type: NotificationType.error,
+              type: ToastType.error,
             );
           },
         ),
@@ -124,6 +122,8 @@ class TrashPageState extends State<TrashPage> {
             scrollController: ScrollController(),
             selectionCount: 0,
             isSelectionMode: false,
+            isSearching: false,
+            searchCount: 0,
           ),
         ),
 

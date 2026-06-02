@@ -433,8 +433,8 @@ abstract class AppLocalizations {
   /// No description provided for @movedItemsToFolder.
   ///
   /// In en, this message translates to:
-  /// **'Moved {count} item{plural} to {folder}'**
-  String movedItemsToFolder(Object count, Object plural, Object folder);
+  /// **'{count, plural, =1{Moved 1 item to {folderName}} other{Moved {count} items to {folderName}}}'**
+  String movedItemsToFolder(int count, String folderName);
 
   /// No description provided for @enterName.
   ///
@@ -471,6 +471,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search here'**
   String get searchHint;
+
+  /// No description provided for @noItemsMoved.
+  ///
+  /// In en, this message translates to:
+  /// **'No items were moved'**
+  String get noItemsMoved;
+
+  /// No description provided for @copiedItemsToFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Copied 1 item to {folderName}} other{Copied {count} items to {folderName}}}'**
+  String copiedItemsToFolder(int count, String folderName);
+
+  /// No description provided for @copiedItemToFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied {item} to {folder}'**
+  String copiedItemToFolder(Object item, Object folder);
+
+  /// No description provided for @noItemsCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'No items were copied'**
+  String get noItemsCopied;
+
+  /// No description provided for @searchResults.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No items} =1{1 item} other{{count} items}}'**
+  String searchResults(int count);
 }
 
 class _AppLocalizationsDelegate

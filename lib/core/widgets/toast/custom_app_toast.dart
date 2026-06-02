@@ -1,17 +1,17 @@
 import 'dart:async';
-import 'package:files/core/widgets/notification/notification_view.dart';
+import 'package:files/core/widgets/toast/toast_view.dart';
 import 'package:flutter/material.dart';
 
-enum NotificationType { success, error, info }
+enum ToastType { success, error, info }
 
-class CustomNotification {
+class CustomAppToast {
   static OverlayEntry? _entry;
   static Timer? _timer;
 
   static void show({
     required BuildContext context,
     required String message,
-    NotificationType type = NotificationType.info,
+    ToastType type = ToastType.info,
     Duration duration = const Duration(seconds: 2),
   }) {
     dismiss();
@@ -19,12 +19,7 @@ class CustomNotification {
     final overlay = Overlay.of(context, rootOverlay: true);
 
     _entry = OverlayEntry(
-      builder:
-          (_) => SimpleNotificationView(
-            message: message,
-            type: type,
-            onClose: dismiss,
-          ),
+      builder: (_) => ToastView(message: message, type: type, onClose: dismiss),
     );
 
     overlay.insert(_entry!);
