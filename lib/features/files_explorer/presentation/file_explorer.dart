@@ -225,7 +225,6 @@ class FileExplorerPageState extends State<FileExplorerPage> {
               (previous, current) =>
                   previous.error != current.error && current.error != null,
           listener: (context, state) {
-            debugPrint("error :${state.error}");
             CustomAppToast.show(
               context: context,
               message: AppLocalizations.of(
