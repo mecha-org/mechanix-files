@@ -11,17 +11,18 @@ enum SortBy { name, modTime, accessedTime, type, size }
 class FileManagerController {
   final ValueNotifier<String> _path = ValueNotifier<String>('');
   final ValueNotifier<SortBy> _sort = ValueNotifier<SortBy>(SortBy.name);
-
-  int _currentPage = 1;
-  int _pageSize = 20;
-
   final ValueNotifier<List<FileSystemEntity>> paginatedEntities =
       ValueNotifier<List<FileSystemEntity>>([]);
 
-  bool _isLoadingChunk = false;
-  bool _hasMorePages = true;
+  static const int _pageSize = 20;
 
-  final List<FileSystemEntity> _currentEntities = [];
+  final List<FileSystemEntity> _allEntities = [];
+  List<FileSystemEntity> _filteredEntities = [];
+
+  int _visibleCount = _pageSize;
+
+  List<FileSystemEntity> get filteredEntities =>
+      List.unmodifiable(_filteredEntities);
 
   bool _ascending = true;
   bool get isAscending => _ascending;
@@ -107,7 +108,8 @@ class FileManagerController {
   // void sortBy(SortBy sortType) => _sort.value = sortType;
 
   /// Get current Directory.
-  Directory get getCurrentDirectory => AppFileSystem.instance.directory(_path.value);
+  Directory get getCurrentDirectory =>
+      AppFileSystem.instance.directory(_path.value);
 
   /// Get current path, similar to [getCurrentDirectory].
   String get getCurrentPath => _path.value;
@@ -121,7 +123,11 @@ class FileManagerController {
   Future<bool> isRootDirectory() async {
     final List<Directory> storageList = (await getStorageList());
     return (storageList
-        .where((element) => element.path == AppFileSystem.instance.directory(_path.value).path)
+        .where(
+          (element) =>
+              element.path ==
+              AppFileSystem.instance.directory(_path.value).path,
+        )
         .isNotEmpty);
   }
 
@@ -140,85 +146,51 @@ class FileManagerController {
 
   /// Jumps to the parent directory of currently opened directory if the parent is accessible.
   Future<void> goToParentDirectory() async {
-    if (!(await isRootDirectory()))
+    if (!(await isRootDirectory())) {
       openDirectory(AppFileSystem.instance.directory(_path.value).parent);
+    }
   }
 
   /// Open a directory and initialize pagination
   Future<void> openDirectory(FileSystemEntity entity) async {
     if (entity is! Directory) {
-      throw ("Please provide a Directory (not a File)");
+      throw Exception('Please provide a Directory');
     }
 
     _updatePath(entity.path);
 
-    // Reset state
-    _currentEntities.clear();
-    _hasMorePages = true;
-    _isLoadingChunk = false;
-    _currentPage = 1;
     _searchQuery.value = '';
 
-    // Load first chunk
-    await loadNextChunk();
+    try {
+      _allEntities.clear();
 
-    // If directory is empty, still update the paginatedEntities to empty list
-    if (_currentEntities.isEmpty) {
+      final contents =
+          await entity.list(recursive: false, followLinks: false).toList();
+
+      _allEntities.addAll(contents);
+      _visibleCount = _pageSize;
+      _applySearchFilter();
+    } catch (e, st) {
+      AppLogger.e('Error loading directory ${entity.path}: $e\n$st');
+
       paginatedEntities.value = [];
     }
   }
 
   /// Load next page of files and emit via StreamController
-  Future<void> loadNextChunk() async {
-    if (_isLoadingChunk || !_hasMorePages) return;
-
-    _isLoadingChunk = true;
-
-    try {
-      final Directory dir = AppFileSystem.instance.directory(_path.value);
-      final int start = (_currentPage - 1) * _pageSize;
-
-      // Get next page of items
-      final List<FileSystemEntity> contents =
-          await dir
-              .list(recursive: false, followLinks: false)
-              .skip(start)
-              .take(_pageSize)
-              .toList();
-
-      // Filter hidden files
-      final List<FileSystemEntity> visible =
-          showHiddenFiles
-              ? contents
-              : contents
-                  .where((e) => !p.basename(e.path).startsWith('.'))
-                  .toList();
-
-      // Sort visible files
-      final sorted = _sortEntities(visible);
-
-      // Append or replace current list
-      if (_currentPage == 1) {
-        _currentEntities
-          ..clear()
-          ..addAll(sorted);
-      } else {
-        _currentEntities.addAll(sorted);
-      }
-
-      // Update observable list
-      paginatedEntities.value = List<FileSystemEntity>.from(_currentEntities);
-
-      // Detect end of pagination
-      final hasMore = contents.length == _pageSize;
-      _hasMorePages = hasMore;
-    } catch (e, st) {
-      AppLogger.e('Error loading directory ${_path.value}: $e\n$st');
-    } finally {
-      _isLoadingChunk = false;
-      _currentPage++;
-      _applySearchFilter(); // Apply search if active
+  void loadNextChunk() {
+    if (_visibleCount >= _filteredEntities.length) {
+      return;
     }
+
+    _visibleCount += _pageSize;
+    _emitVisibleItems();
+  }
+
+  void _emitVisibleItems() {
+    final count = _visibleCount.clamp(0, _filteredEntities.length);
+
+    paginatedEntities.value = _filteredEntities.take(count).toList();
   }
 
   void toggleShowHiddenFiles() {
@@ -336,7 +308,7 @@ class FileManagerController {
 
       if (trimmedQuery.isEmpty) {
         // Reset to normal paginated view
-        paginatedEntities.value = List<FileSystemEntity>.from(_currentEntities);
+        _applySearchFilter();
         return;
       }
 
@@ -350,32 +322,29 @@ class FileManagerController {
   }
 
   void _applySearchFilter() {
-    // Start with all current entities
-    List<FileSystemEntity> list = List<FileSystemEntity>.from(_currentEntities);
+    List<FileSystemEntity> list = List<FileSystemEntity>.from(_allEntities);
 
-    // Apply hidden file filter
     if (!showHiddenFiles) {
       list =
           list.where((entity) {
-            final name = p.basename(entity.path);
-            return !name.startsWith('.');
+            return !p.basename(entity.path).startsWith('.');
           }).toList();
     }
 
-    // Apply search filter (if query present)
     if (_searchQuery.value.isNotEmpty) {
-      final query = _searchQuery.value.toLowerCase();
+      final query = _searchQuery.value;
+
       list =
           list.where((entity) {
-            final name = p.basename(entity.path).toLowerCase();
-            return name.contains(query);
+            return p.basename(entity.path).toLowerCase().contains(query);
           }).toList();
     }
 
-    // Apply sorting
     list = _sortEntities(list);
 
-    paginatedEntities.value = list;
+    _filteredEntities = list;
+
+    _emitVisibleItems();
   }
 
   Future<void> _searchRecursively(String query) async {
@@ -405,6 +374,7 @@ class FileManagerController {
     if (currentPath.isEmpty) return;
 
     final dir = AppFileSystem.instance.directory(currentPath);
+
     if (!dir.existsSync()) return;
 
     await openDirectory(dir);

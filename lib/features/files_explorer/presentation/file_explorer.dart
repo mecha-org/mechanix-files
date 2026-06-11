@@ -67,6 +67,7 @@ class FileExplorerPageState extends State<FileExplorerPage> {
   final homeDir = AppPaths.homeDir;
   final recentDir = AppPaths.recentDir;
   bool isHomePageDir = false;
+  bool _copyConflictDialogOpen = false;
 
   final ValueNotifier<ExplorerBottomPanel> activePanelNotifier = ValueNotifier(
     ExplorerBottomPanel.none,
@@ -224,6 +225,7 @@ class FileExplorerPageState extends State<FileExplorerPage> {
               (previous, current) =>
                   previous.error != current.error && current.error != null,
           listener: (context, state) {
+            debugPrint("error :${state.error}");
             CustomAppToast.show(
               context: context,
               message: AppLocalizations.of(
@@ -241,7 +243,8 @@ class FileExplorerPageState extends State<FileExplorerPage> {
           listener: (context, state) async {
             if (!mounted) return;
 
-            if (!state.loading &&
+            if (!_copyConflictDialogOpen &&
+                !state.loading &&
                 state.conflictingPaths.isNotEmpty &&
                 state.isMoveMode) {
               final conflicts =
@@ -254,6 +257,7 @@ class FileExplorerPageState extends State<FileExplorerPage> {
                   }).toList();
 
               totalMovedCount = state.movedPaths.length;
+              _copyConflictDialogOpen = true;
 
               await PasteHandler.handleConflictsSequentially(
                 context,
@@ -283,6 +287,8 @@ class FileExplorerPageState extends State<FileExplorerPage> {
               context.read<FilesBloc>().add(CancelMoveMode());
 
               reload();
+
+              _copyConflictDialogOpen = false;
             }
           },
         ),
@@ -617,7 +623,8 @@ class FileExplorerPageState extends State<FileExplorerPage> {
   }
 
   void handleSelectAll() {
-    final files = controller.paginatedEntities.value;
+    // final files = controller.paginatedEntities.value;
+    final files = controller.filteredEntities;
     final allPaths = {for (final file in files) file.path};
     selectedPathsNotifier.value = allPaths;
 

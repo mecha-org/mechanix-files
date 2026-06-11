@@ -396,7 +396,7 @@ class ConflictResolutionBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fileName = p.basename(conflictingPaths.first);
-
+    final currentConflict = conflictingPaths.first;
     return ClipPath(
       child: Container(
         decoration: const BoxDecoration(color: AppColors.backgroundVariant),
@@ -452,10 +452,12 @@ class ConflictResolutionBottomSheet extends StatelessWidget {
                       textColor: AppColors.onSurface,
                       borderRadius: 0,
                       onPressed: () {
-                        totalCopiedCount = totalCopiedCount! - 1;
+                        if (totalCopiedCount != null && totalCopiedCount! > 0) {
+                          totalCopiedCount = totalCopiedCount! - 1;
+                        }
                         context.read<FilesBloc>().add(
                           ContinueCopyWithConflictResolution(
-                            sourcePaths: conflictingPaths,
+                            sourcePaths: [currentConflict],
                             destinationPath: destinationPath,
                             strategy: ConflictResolutionStrategy.skip,
                             controller: controller,
@@ -477,7 +479,7 @@ class ConflictResolutionBottomSheet extends StatelessWidget {
                       onPressed: () {
                         context.read<FilesBloc>().add(
                           ContinueCopyWithConflictResolution(
-                            sourcePaths: conflictingPaths,
+                            sourcePaths: [currentConflict],
                             destinationPath: destinationPath,
                             strategy: ConflictResolutionStrategy.replace,
                             controller: controller,

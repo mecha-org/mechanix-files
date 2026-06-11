@@ -151,15 +151,18 @@ class FilesBloc extends Bloc<FilesEvent, FilesState> {
     try {
       emit(state.copyWith(loading: true, error: null));
 
+      final resolvedPath = event.sourcePaths.first;
+
       await fileRepository.copyEntities(
-        [event.sourcePaths.first], // Only resolve the first conflict
+        [resolvedPath],
         event.destinationPath,
         strategy: event.strategy,
       );
 
-      final remainingConflicts = [...event.sourcePaths]..removeAt(0);
+      final remainingConflicts = List<String>.from(state.conflictingPaths)
+        ..remove(resolvedPath);
+
       if (remainingConflicts.isNotEmpty) {
-        // Emit next conflict to show dialog again
         emit(
           state.copyWith(conflictingPaths: remainingConflicts, loading: false),
         );
