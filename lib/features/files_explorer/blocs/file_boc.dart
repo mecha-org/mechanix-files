@@ -132,12 +132,13 @@ class FilesBloc extends Bloc<FilesEvent, FilesState> {
             conflictingPaths: conflicts,
             conflictDestinationPath: event.destinationPath,
             isCopyMode: true,
+            copiedPaths: conflicts,
           ),
         );
       } else {
         // No conflicts, all done
         event.completer?.complete();
-        emit(state.copyWith(loading: false));
+        emit(state.copyWith(loading: false, copiedPaths: []));
       }
     } catch (e) {
       emit(state.copyWith(error: 'Failed to copy: $e', loading: false));
@@ -161,10 +162,16 @@ class FilesBloc extends Bloc<FilesEvent, FilesState> {
 
       final remainingConflicts = List<String>.from(state.conflictingPaths)
         ..remove(resolvedPath);
+      final remainingCopied = List<String>.from(state.copiedPaths)
+        ..remove(resolvedPath);
 
       if (remainingConflicts.isNotEmpty) {
         emit(
-          state.copyWith(conflictingPaths: remainingConflicts, loading: false),
+          state.copyWith(
+            conflictingPaths: remainingConflicts,
+            copiedPaths: remainingCopied,
+            loading: false,
+          ),
         );
       } else {
         // All conflicts resolved
@@ -175,12 +182,29 @@ class FilesBloc extends Bloc<FilesEvent, FilesState> {
             conflictingPaths: [],
             conflictDestinationPath: '',
             isCopyMode: false,
+            copiedPaths: [],
             loading: false,
           ),
         );
       }
     } catch (e) {
-      emit(state.copyWith(error: 'Failed to copy: $e', loading: false));
+      final remainingConflicts = List<String>.from(state.conflictingPaths);
+      if (remainingConflicts.isNotEmpty) {
+        remainingConflicts.remove(event.sourcePaths.first);
+      }
+      final remainingCopied = List<String>.from(state.copiedPaths);
+      if (remainingCopied.isNotEmpty) {
+        remainingCopied.remove(event.sourcePaths.first);
+      }
+      emit(
+        state.copyWith(
+          error: 'Failed to copy: $e',
+          conflictingPaths: remainingConflicts,
+          copiedPaths: remainingCopied,
+          isCopyMode: remainingConflicts.isNotEmpty,
+          loading: false,
+        ),
+      );
     }
   }
 
@@ -220,11 +244,12 @@ class FilesBloc extends Bloc<FilesEvent, FilesState> {
             conflictingPaths: conflicts,
             conflictDestinationPath: event.destinationPath,
             isMoveMode: true,
+            movedPaths: conflicts,
           ),
         );
       } else {
         event.completer?.complete();
-        emit(state.copyWith(loading: false));
+        emit(state.copyWith(loading: false, movedPaths: []));
       }
     } catch (e) {
       emit(state.copyWith(error: 'Failed to move: $e', loading: false));
@@ -238,17 +263,26 @@ class FilesBloc extends Bloc<FilesEvent, FilesState> {
     try {
       emit(state.copyWith(loading: true, error: null));
 
+      final resolvedPath = event.sourcePaths.first;
+
       await fileRepository.moveEntities(
-        [event.sourcePaths.first], // One at a time
+        [resolvedPath], // One at a time
         event.destinationPath,
         strategy: event.strategy,
       );
 
-      final remainingConflicts = [...event.sourcePaths]..removeAt(0);
+      final remainingConflicts = List<String>.from(state.conflictingPaths)
+        ..remove(resolvedPath);
+      final remainingMoved = List<String>.from(state.movedPaths)
+        ..remove(resolvedPath);
 
       if (remainingConflicts.isNotEmpty) {
         emit(
-          state.copyWith(conflictingPaths: remainingConflicts, loading: false),
+          state.copyWith(
+            conflictingPaths: remainingConflicts,
+            movedPaths: remainingMoved,
+            loading: false,
+          ),
         );
       } else {
         emit(
@@ -256,12 +290,29 @@ class FilesBloc extends Bloc<FilesEvent, FilesState> {
             conflictingPaths: [],
             conflictDestinationPath: '',
             isMoveMode: false,
+            movedPaths: [],
             loading: false,
           ),
         );
       }
     } catch (e) {
-      emit(state.copyWith(error: 'Failed to move: $e', loading: false));
+      final remainingConflicts = List<String>.from(state.conflictingPaths);
+      if (remainingConflicts.isNotEmpty) {
+        remainingConflicts.remove(event.sourcePaths.first);
+      }
+      final remainingMoved = List<String>.from(state.movedPaths);
+      if (remainingMoved.isNotEmpty) {
+        remainingMoved.remove(event.sourcePaths.first);
+      }
+      emit(
+        state.copyWith(
+          error: 'Failed to move: $e',
+          conflictingPaths: remainingConflicts,
+          movedPaths: remainingMoved,
+          isMoveMode: remainingConflicts.isNotEmpty,
+          loading: false,
+        ),
+      );
     }
   }
 

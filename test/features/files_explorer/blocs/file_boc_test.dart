@@ -258,6 +258,7 @@ void main() {
               conflictingPaths: ['/storage/file1.txt'],
               conflictDestinationPath: '/dest',
               isCopyMode: true,
+              copiedPaths: ['/storage/file1.txt'],
             ),
           ],
     );
@@ -344,6 +345,7 @@ void main() {
               conflictingPaths: ['/storage/file1.txt'],
               conflictDestinationPath: '/dest',
               isMoveMode: true,
+              movedPaths: ['/storage/file1.txt'],
             ),
           ],
     );

@@ -36,7 +36,7 @@ enum ExplorerMode {
   copying, // copy-to mode
 }
 
-var totalMovedCount = 0;
+int? totalMovedCount;
 int? totalCopiedCount;
 
 class FileExplorerPage extends StatefulWidget {
@@ -286,7 +286,7 @@ class FileExplorerPageState extends State<FileExplorerPage> {
                     );
                   }).toList();
 
-              totalMovedCount = state.movedPaths.length;
+              totalMovedCount ??= state.movedPaths.length;
               _copyConflictDialogOpen = true;
 
               await PasteHandler.handleConflictsSequentially(
@@ -298,13 +298,13 @@ class FileExplorerPageState extends State<FileExplorerPage> {
 
               final folderName = p.basename(state.conflictDestinationPath);
 
-              if (totalMovedCount > 0) {
+              if (totalMovedCount != null && totalMovedCount! > 0) {
                 CustomAppToast.show(
                   context: context,
                   type: ToastType.success,
                   message: AppLocalizations.of(
                     context,
-                  )!.movedItemsToFolder(totalMovedCount, folderName),
+                  )!.movedItemsToFolder(totalMovedCount!, folderName),
                 );
               } else {
                 CustomAppToast.show(
@@ -315,6 +315,7 @@ class FileExplorerPageState extends State<FileExplorerPage> {
               }
 
               context.read<FilesBloc>().add(CancelMoveMode());
+              totalMovedCount = null;
 
               reload();
 

@@ -61,7 +61,7 @@ class PasteHandler {
 
       if (!context.mounted) return;
 
-      if (totalMovedCount > 0) {
+      if (totalMovedCount != null && totalMovedCount! > 0) {
         CustomAppToast.show(
           context: context,
           type: ToastType.success,
@@ -76,6 +76,7 @@ class PasteHandler {
           message: AppLocalizations.of(context)!.noItemsMoved,
         );
       }
+      totalMovedCount = null;
 
       return;
     }
@@ -88,6 +89,7 @@ class PasteHandler {
         final normalizedTarget = p.normalize(targetPath);
 
         return normalizedSource == normalizedTarget ||
+            p.dirname(normalizedSource) == normalizedTarget ||
             p.isWithin(normalizedSource, normalizedTarget);
       });
 
@@ -102,6 +104,7 @@ class PasteHandler {
         return;
       }
 
+      totalMovedCount = movePathCount;
       final completer = Completer<void>();
       bloc.add(
         Move(
@@ -125,6 +128,7 @@ class PasteHandler {
         )!.movedItemsToFolder(movePathCount, folderName),
       );
 
+      totalMovedCount = null;
       return;
     }
 
@@ -132,6 +136,7 @@ class PasteHandler {
     if (state.isCopyMode) {
       final completer = Completer<void>();
       final copyPathCount = state.copiedPaths.length;
+      totalCopiedCount = copyPathCount;
 
       bloc.add(
         Copy(
@@ -163,6 +168,7 @@ class PasteHandler {
         )!.copiedItemsToFolder(copyPathCount, folderName),
       );
 
+      totalCopiedCount = null;
       return;
     }
   }
@@ -320,7 +326,9 @@ class PasteHandler {
                             textColor: AppColors.onSurface,
                             borderRadius: 0,
                             onPressed: () {
-                              totalMovedCount--;
+                              if (totalMovedCount != null && totalMovedCount! > 0) {
+                                totalMovedCount = totalMovedCount! - 1;
+                              }
 
                               Navigator.pop(
                                 sheetContext,
