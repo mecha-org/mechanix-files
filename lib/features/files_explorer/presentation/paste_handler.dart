@@ -47,6 +47,8 @@ class PasteHandler {
 
       final completer = Completer<void>();
 
+      totalMovedCount = 1;
+
       bloc.add(
         Move(
           sourcePaths: [moveFilepath],
