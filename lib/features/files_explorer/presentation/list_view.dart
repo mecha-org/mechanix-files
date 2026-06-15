@@ -193,7 +193,6 @@ class ExplorerListSection extends StatelessWidget {
 
                                 if (FileManager.isDirectory(entity)) {
                                   await controller.openDirectory(entity);
-                                  scrollController.jumpTo(0);
                                 } else {
                                   handleFileTap(
                                     context,

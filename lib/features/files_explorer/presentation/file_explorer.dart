@@ -81,23 +81,51 @@ class FileExplorerPageState extends State<FileExplorerPage> {
   final searchOverlayController = SearchOverlayController();
   final _focusNode = FocusNode();
 
+  final Map<String, double> _scrollPositions = {};
+  bool _shouldRestoreScroll = false;
+
   @override
   void initState() {
     super.initState();
 
     _scrollController.addListener(_onScroll);
 
-    controller.getPathNotifier.addListener(() {
-      setState(() {
-        currentPath = controller.getPathNotifier.value;
-      });
-    });
+    controller.getPathNotifier.addListener(_onPathChanged);
+    controller.paginatedEntities.addListener(_onEntitiesChanged);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeExplorer();
     });
 
     _openKeyboardAfterLoad();
+  }
+
+  void _onPathChanged() {
+    final oldPath = currentPath;
+    final newPath = controller.getPathNotifier.value;
+
+    if (oldPath.isNotEmpty && _scrollController.hasClients) {
+      _scrollPositions[oldPath] = _scrollController.offset;
+    }
+
+    _scrollPositions.removeWhere((savedPath, _) => p.isWithin(newPath, savedPath));
+
+    setState(() {
+      currentPath = newPath;
+      _shouldRestoreScroll = true;
+    });
+  }
+
+  void _onEntitiesChanged() {
+    if (_shouldRestoreScroll) {
+      _shouldRestoreScroll = false;
+      final targetOffset = _scrollPositions[currentPath] ?? 0.0;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_scrollController.hasClients) {
+          _scrollController.jumpTo(targetOffset);
+        }
+      });
+    }
   }
 
   Future<void> _initializeExplorer() async {
@@ -162,6 +190,9 @@ class FileExplorerPageState extends State<FileExplorerPage> {
   void dispose() {
     searchQuery.dispose();
     searchOverlayController.dispose();
+
+    controller.getPathNotifier.removeListener(_onPathChanged);
+    controller.paginatedEntities.removeListener(_onEntitiesChanged);
 
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
@@ -410,7 +441,7 @@ class FileExplorerPageState extends State<FileExplorerPage> {
 
                             /// search mode
                             isSearching: isSearching,
-                            searchCount: entities.length,
+                            searchCount: controller.filteredEntities.length,
                           );
                         },
                       );

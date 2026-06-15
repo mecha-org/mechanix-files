@@ -20,6 +20,7 @@ class FileManagerController {
   List<FileSystemEntity> _filteredEntities = [];
 
   int _visibleCount = _pageSize;
+  final Map<String, int> _visibleCounts = {};
 
   List<FileSystemEntity> get filteredEntities =>
       List.unmodifiable(_filteredEntities);
@@ -38,6 +39,10 @@ class FileManagerController {
   bool showHiddenFiles = false;
 
   void _updatePath(String path) {
+    if (_path.value.isNotEmpty) {
+      _visibleCounts[_path.value] = _visibleCount;
+    }
+    _visibleCounts.removeWhere((savedPath, _) => p.isWithin(path, savedPath));
     _path.value = path;
   }
 
@@ -168,7 +173,7 @@ class FileManagerController {
           await entity.list(recursive: false, followLinks: false).toList();
 
       _allEntities.addAll(contents);
-      _visibleCount = _pageSize;
+      _visibleCount = _visibleCounts[entity.path] ?? _pageSize;
       _applySearchFilter();
     } catch (e, st) {
       AppLogger.e('Error loading directory ${entity.path}: $e\n$st');
@@ -361,6 +366,7 @@ class FileManagerController {
         }
       }
       _sortEntities(results);
+      _filteredEntities = results;
       paginatedEntities.value = results;
     } catch (e) {
       AppLogger.e('Recursive search error: $e');
@@ -388,6 +394,7 @@ class FileManagerController {
     _sort.dispose();
     _searchQuery.dispose();
     _debounce?.cancel();
+    _visibleCounts.clear();
   }
 
   void syncSettings({required bool showHidden}) {
