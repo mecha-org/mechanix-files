@@ -22,7 +22,7 @@ class CustomIconButton extends StatelessWidget {
     required this.onPressed,
     this.enabled = true,
     this.iconSize = 24,
-    this.minSize = 48,
+    this.minSize = 56, //48
     this.padding = const EdgeInsets.all(8),
     this.activeColor,
     this.disabledColor,
@@ -92,13 +92,24 @@ class CustomIconButton extends StatelessWidget {
 
     return IconButton(
       onPressed: enabled ? onPressed : null,
-      padding: padding,
+      padding: EdgeInsets.zero,
       constraints: BoxConstraints(minWidth: minSize, minHeight: minSize),
-      icon: IconTheme(
-        data: IconThemeData(color: color, size: iconSize),
-        child: ColorFiltered(
-          colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-          child: icon,
+      icon: Container(
+        width: minSize,
+        height: minSize,
+        alignment: Alignment.center,
+
+        // DEBUG BORDER
+        decoration: BoxDecoration(
+          border: Border.all(color: AppColors.onSurfaceVariantDark, width: 1),
+        ),
+
+        child: IconTheme(
+          data: IconThemeData(color: color, size: iconSize),
+          child: ColorFiltered(
+            colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+            child: icon,
+          ),
         ),
       ),
     );
