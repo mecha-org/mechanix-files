@@ -36,7 +36,7 @@ enum ExplorerMode {
   copying, // copy-to mode
 }
 
-var totalMovedCount = 0;
+int? totalMovedCount;
 int? totalCopiedCount;
 
 class FileExplorerPage extends StatefulWidget {
@@ -67,6 +67,7 @@ class FileExplorerPageState extends State<FileExplorerPage> {
   final homeDir = AppPaths.homeDir;
   final recentDir = AppPaths.recentDir;
   bool isHomePageDir = false;
+  bool _copyConflictDialogOpen = false;
 
   final ValueNotifier<ExplorerBottomPanel> activePanelNotifier = ValueNotifier(
     ExplorerBottomPanel.none,
@@ -80,23 +81,51 @@ class FileExplorerPageState extends State<FileExplorerPage> {
   final searchOverlayController = SearchOverlayController();
   final _focusNode = FocusNode();
 
+  final Map<String, double> _scrollPositions = {};
+  bool _shouldRestoreScroll = false;
+
   @override
   void initState() {
     super.initState();
 
     _scrollController.addListener(_onScroll);
 
-    controller.getPathNotifier.addListener(() {
-      setState(() {
-        currentPath = controller.getPathNotifier.value;
-      });
-    });
+    controller.getPathNotifier.addListener(_onPathChanged);
+    controller.paginatedEntities.addListener(_onEntitiesChanged);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeExplorer();
     });
 
     _openKeyboardAfterLoad();
+  }
+
+  void _onPathChanged() {
+    final oldPath = currentPath;
+    final newPath = controller.getPathNotifier.value;
+
+    if (oldPath.isNotEmpty && _scrollController.hasClients) {
+      _scrollPositions[oldPath] = _scrollController.offset;
+    }
+
+    _scrollPositions.removeWhere((savedPath, _) => p.isWithin(newPath, savedPath));
+
+    setState(() {
+      currentPath = newPath;
+      _shouldRestoreScroll = true;
+    });
+  }
+
+  void _onEntitiesChanged() {
+    if (_shouldRestoreScroll) {
+      _shouldRestoreScroll = false;
+      final targetOffset = _scrollPositions[currentPath] ?? 0.0;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_scrollController.hasClients) {
+          _scrollController.jumpTo(targetOffset);
+        }
+      });
+    }
   }
 
   Future<void> _initializeExplorer() async {
@@ -161,6 +190,9 @@ class FileExplorerPageState extends State<FileExplorerPage> {
   void dispose() {
     searchQuery.dispose();
     searchOverlayController.dispose();
+
+    controller.getPathNotifier.removeListener(_onPathChanged);
+    controller.paginatedEntities.removeListener(_onEntitiesChanged);
 
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
@@ -241,7 +273,8 @@ class FileExplorerPageState extends State<FileExplorerPage> {
           listener: (context, state) async {
             if (!mounted) return;
 
-            if (!state.loading &&
+            if (!_copyConflictDialogOpen &&
+                !state.loading &&
                 state.conflictingPaths.isNotEmpty &&
                 state.isMoveMode) {
               final conflicts =
@@ -253,7 +286,8 @@ class FileExplorerPageState extends State<FileExplorerPage> {
                     );
                   }).toList();
 
-              totalMovedCount = state.movedPaths.length;
+              totalMovedCount ??= state.movedPaths.length;
+              _copyConflictDialogOpen = true;
 
               await PasteHandler.handleConflictsSequentially(
                 context,
@@ -264,13 +298,13 @@ class FileExplorerPageState extends State<FileExplorerPage> {
 
               final folderName = p.basename(state.conflictDestinationPath);
 
-              if (totalMovedCount > 0) {
+              if (totalMovedCount != null && totalMovedCount! > 0) {
                 CustomAppToast.show(
                   context: context,
                   type: ToastType.success,
                   message: AppLocalizations.of(
                     context,
-                  )!.movedItemsToFolder(totalMovedCount, folderName),
+                  )!.movedItemsToFolder(totalMovedCount!, folderName),
                 );
               } else {
                 CustomAppToast.show(
@@ -281,8 +315,11 @@ class FileExplorerPageState extends State<FileExplorerPage> {
               }
 
               context.read<FilesBloc>().add(CancelMoveMode());
+              totalMovedCount = null;
 
               reload();
+
+              _copyConflictDialogOpen = false;
             }
           },
         ),
@@ -405,7 +442,7 @@ class FileExplorerPageState extends State<FileExplorerPage> {
 
                             /// search mode
                             isSearching: isSearching,
-                            searchCount: entities.length,
+                            searchCount: controller.filteredEntities.length,
                           );
                         },
                       );
@@ -617,7 +654,8 @@ class FileExplorerPageState extends State<FileExplorerPage> {
   }
 
   void handleSelectAll() {
-    final files = controller.paginatedEntities.value;
+    // final files = controller.paginatedEntities.value;
+    final files = controller.filteredEntities;
     final allPaths = {for (final file in files) file.path};
     selectedPathsNotifier.value = allPaths;
 

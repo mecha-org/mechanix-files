@@ -47,6 +47,8 @@ class PasteHandler {
 
       final completer = Completer<void>();
 
+      totalMovedCount = 1;
+
       bloc.add(
         Move(
           sourcePaths: [moveFilepath],
@@ -59,7 +61,7 @@ class PasteHandler {
 
       if (!context.mounted) return;
 
-      if (totalMovedCount > 0) {
+      if (totalMovedCount != null && totalMovedCount! > 0) {
         CustomAppToast.show(
           context: context,
           type: ToastType.success,
@@ -74,6 +76,7 @@ class PasteHandler {
           message: AppLocalizations.of(context)!.noItemsMoved,
         );
       }
+      totalMovedCount = null;
 
       return;
     }
@@ -86,6 +89,7 @@ class PasteHandler {
         final normalizedTarget = p.normalize(targetPath);
 
         return normalizedSource == normalizedTarget ||
+            p.dirname(normalizedSource) == normalizedTarget ||
             p.isWithin(normalizedSource, normalizedTarget);
       });
 
@@ -100,6 +104,7 @@ class PasteHandler {
         return;
       }
 
+      totalMovedCount = movePathCount;
       final completer = Completer<void>();
       bloc.add(
         Move(
@@ -123,6 +128,7 @@ class PasteHandler {
         )!.movedItemsToFolder(movePathCount, folderName),
       );
 
+      totalMovedCount = null;
       return;
     }
 
@@ -130,6 +136,7 @@ class PasteHandler {
     if (state.isCopyMode) {
       final completer = Completer<void>();
       final copyPathCount = state.copiedPaths.length;
+      totalCopiedCount = copyPathCount;
 
       bloc.add(
         Copy(
@@ -161,6 +168,7 @@ class PasteHandler {
         )!.copiedItemsToFolder(copyPathCount, folderName),
       );
 
+      totalCopiedCount = null;
       return;
     }
   }
@@ -318,7 +326,9 @@ class PasteHandler {
                             textColor: AppColors.onSurface,
                             borderRadius: 0,
                             onPressed: () {
-                              totalMovedCount--;
+                              if (totalMovedCount != null && totalMovedCount! > 0) {
+                                totalMovedCount = totalMovedCount! - 1;
+                              }
 
                               Navigator.pop(
                                 sheetContext,
@@ -396,7 +406,7 @@ class ConflictResolutionBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fileName = p.basename(conflictingPaths.first);
-
+    final currentConflict = conflictingPaths.first;
     return ClipPath(
       child: Container(
         decoration: const BoxDecoration(color: AppColors.backgroundVariant),
@@ -452,10 +462,12 @@ class ConflictResolutionBottomSheet extends StatelessWidget {
                       textColor: AppColors.onSurface,
                       borderRadius: 0,
                       onPressed: () {
-                        totalCopiedCount = totalCopiedCount! - 1;
+                        if (totalCopiedCount != null && totalCopiedCount! > 0) {
+                          totalCopiedCount = totalCopiedCount! - 1;
+                        }
                         context.read<FilesBloc>().add(
                           ContinueCopyWithConflictResolution(
-                            sourcePaths: conflictingPaths,
+                            sourcePaths: [currentConflict],
                             destinationPath: destinationPath,
                             strategy: ConflictResolutionStrategy.skip,
                             controller: controller,
@@ -477,7 +489,7 @@ class ConflictResolutionBottomSheet extends StatelessWidget {
                       onPressed: () {
                         context.read<FilesBloc>().add(
                           ContinueCopyWithConflictResolution(
-                            sourcePaths: conflictingPaths,
+                            sourcePaths: [currentConflict],
                             destinationPath: destinationPath,
                             strategy: ConflictResolutionStrategy.replace,
                             controller: controller,

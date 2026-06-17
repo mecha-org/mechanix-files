@@ -138,7 +138,7 @@ class ExplorerBreadcrumbs extends StatelessWidget {
                         if (!isLast)
                           const Icon(
                             Icons.chevron_right,
-                            size: 24,
+                            size: 28,
                             color: AppColors.onSurfaceVariant,
                           ),
                       ],
@@ -244,7 +244,7 @@ class ExplorerBreadcrumbs extends StatelessWidget {
                   if (!isLast)
                     const Icon(
                       Icons.chevron_right,
-                      size: 24,
+                      size: 28,
                       color: AppColors.onSurfaceVariant,
                     ),
                 ],

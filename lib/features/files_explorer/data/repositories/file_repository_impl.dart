@@ -71,6 +71,14 @@ class FileRepositoryImpl implements FileRepository {
     for (final srcPath in sourcePaths) {
       final name = p.basename(srcPath);
       final destPath = p.join(destinationPath, name);
+
+      // Skip if the source and destination paths are the same.
+      // This can happen when the user attempts to copy an item
+      // into the directory where it already exists.
+      if (p.normalize(srcPath) == p.normalize(destPath)) {
+        continue;
+      }
+
       final type = _fs.file(srcPath).statSync().type;
 
       final exists =
@@ -123,6 +131,13 @@ class FileRepositoryImpl implements FileRepository {
     for (final path in sourcePaths) {
       final name = p.basename(path);
       final newPath = p.join(destinationPath, name);
+
+      // Skip if the source and destination paths are the same.
+      // Moving an item onto itself is a no-op and would otherwise
+      // result in an invalid move operation.
+      if (p.normalize(path) == p.normalize(newPath)) {
+        continue;
+      }
 
       final isFile = await _fs.file(path).exists();
       final entity = isFile ? _fs.file(path) : _fs.directory(path);

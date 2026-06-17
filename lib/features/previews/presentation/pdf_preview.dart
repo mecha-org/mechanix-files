@@ -161,7 +161,12 @@ class _PdfPreviewState extends State<PdfPreview> {
         },
 
         firstAttemptByEmptyPassword: true,
-        params: const PdfViewerParams(backgroundColor: AppColors.surface),
+        params: PdfViewerParams(
+          backgroundColor: AppColors.surface,
+          errorBannerBuilder: (context, error, stack, document) {
+            return const SizedBox.shrink();
+          },
+        ),
       ),
 
       bottomNavigationBar: PreviewActionBar(

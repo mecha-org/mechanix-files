@@ -79,9 +79,18 @@ class SearchOverlayController {
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
                       disabledBorder: InputBorder.none,
-                      prefixIcon: CustomIconButton.asset(
-                        assetPath: FileIcons.search,
-                        onPressed: () {},
+
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.only(
+                          right: 8,
+                          left: 8,
+                          bottom: 8,
+                        ),
+                        child: Image.asset(
+                          FileIcons.search,
+                          width: 24,
+                          height: 24,
+                        ),
                       ),
 
                       suffixIcon: CustomIconButton.asset(
