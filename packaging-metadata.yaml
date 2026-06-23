@@ -2,7 +2,7 @@ name: packaging-metadata
 version: 1.0.0
 summary: Metadata for Mechanix Files app packaging
 applications:
-  - name: files
+  - name: mechanix_files
     folder: .
     binary: mechanix_files
     description: "Mechanix Files application"
