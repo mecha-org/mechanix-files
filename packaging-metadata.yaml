@@ -4,6 +4,6 @@ summary: Metadata for Mechanix Files app packaging
 applications:
   - name: files
     folder: .
-    binary: files
+    binary: mechanix_files
     description: "Mechanix Files application"
     maintainer: "Yogita Hiray <yogitah@mechasystems.com>"
