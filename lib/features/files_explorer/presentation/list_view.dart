@@ -107,15 +107,11 @@ class ExplorerListSection extends StatelessWidget {
                                 state,
                                 isSearching,
                               ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color:
-                                  isNew
-                                      ? AppColors.backgroundVariant
-                                      : isSelected
-                                      ? AppColors.backgroundVariant
-                                      : Colors.transparent,
-                            ),
+                          child: Material(
+                            color:
+                                isNew || isSelected
+                                    ? AppColors.backgroundVariant
+                                    : Colors.transparent,
                             child: ListTile(
                               minTileHeight: 64,
                               contentPadding: const EdgeInsets.symmetric(

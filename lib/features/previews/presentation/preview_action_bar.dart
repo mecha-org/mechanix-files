@@ -44,8 +44,11 @@ class PreviewActionBar extends StatelessWidget {
           CustomIconButton.asset(
             assetPath: FileIcons.copy,
             onPressed: () {
-              state?.selectedPathsNotifier.value = {path};
-              state?.handleCopy();
+              rootContext.read<FilesBloc>().add(StartCopyMode([path]));
+              if (state != null) {
+                state!.selectedPathsNotifier.value = {};
+              }
+              Navigator.popUntil(context, (route) => route.isFirst);
             },
           ),
         ],
