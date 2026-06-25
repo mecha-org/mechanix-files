@@ -60,15 +60,6 @@ class ExplorerListSection extends StatelessWidget {
                   );
                 }
 
-                // Move newly created folder to top
-                if (controller.newFolderPath != null) {
-                  entities.sort((a, b) {
-                    if (a.path == controller.newFolderPath) return -1;
-                    if (b.path == controller.newFolderPath) return 1;
-                    return 0;
-                  });
-                }
-
                 return ScrollConfiguration(
                   behavior: ScrollConfiguration.of(context).copyWith(
                     dragDevices: {
