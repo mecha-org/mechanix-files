@@ -122,6 +122,7 @@
   },
   "enterName": "Enter name",
   "nameCannotBeEmpty": "Name cannot be empty",
+  "itemAlreadyExists": "An item with this name already exists",
   "renameItem": "Rename '{name}'",
   "@renameItem": {
     "placeholders": {

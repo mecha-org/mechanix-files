@@ -60,15 +60,6 @@ class ExplorerListSection extends StatelessWidget {
                   );
                 }
 
-                // Move newly created folder to top
-                if (controller.newFolderPath != null) {
-                  entities.sort((a, b) {
-                    if (a.path == controller.newFolderPath) return -1;
-                    if (b.path == controller.newFolderPath) return 1;
-                    return 0;
-                  });
-                }
-
                 return ScrollConfiguration(
                   behavior: ScrollConfiguration.of(context).copyWith(
                     dragDevices: {
@@ -107,15 +98,11 @@ class ExplorerListSection extends StatelessWidget {
                                 state,
                                 isSearching,
                               ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color:
-                                  isNew
-                                      ? AppColors.backgroundVariant
-                                      : isSelected
-                                      ? AppColors.backgroundVariant
-                                      : Colors.transparent,
-                            ),
+                          child: Material(
+                            color:
+                                isNew || isSelected
+                                    ? AppColors.backgroundVariant
+                                    : Colors.transparent,
                             child: ListTile(
                               minTileHeight: 64,
                               contentPadding: const EdgeInsets.symmetric(
