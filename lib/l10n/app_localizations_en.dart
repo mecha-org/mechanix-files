@@ -228,6 +228,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nameCannotBeEmpty => 'Name cannot be empty';
 
   @override
+  String get itemAlreadyExists => 'An item with this name already exists';
+
+  @override
   String renameItem(Object name) {
     return 'Rename \'$name\'';
   }

@@ -448,6 +448,12 @@ abstract class AppLocalizations {
   /// **'Name cannot be empty'**
   String get nameCannotBeEmpty;
 
+  /// No description provided for @itemAlreadyExists.
+  ///
+  /// In en, this message translates to:
+  /// **'An item with this name already exists'**
+  String get itemAlreadyExists;
+
   /// No description provided for @renameItem.
   ///
   /// In en, this message translates to:
