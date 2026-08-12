@@ -891,12 +891,12 @@ class FileExplorerPageState extends State<FileExplorerPage> {
     );
   }
 
-  void _submitRename(
+  Future<void> _submitRename(
     BuildContext ctx,
     String oldPath,
     String newName,
     String initialName,
-  ) {
+  ) async {
     if (newName.isEmpty) return;
 
     // If unchanged, just close sheet and return current path
@@ -909,6 +909,19 @@ class FileExplorerPageState extends State<FileExplorerPage> {
     }
 
     final newPath = p.join(p.dirname(oldPath), newName);
+
+    final exists = await AppFileSystem.instance.file(newPath).exists() ||
+        await AppFileSystem.instance.directory(newPath).exists();
+
+    if (exists) {
+      if (!ctx.mounted) return;
+      CustomAppToast.show(
+        context: ctx,
+        message: AppLocalizations.of(ctx)!.itemAlreadyExists,
+        type: ToastType.error,
+      );
+      return;
+    }
 
     ctx.read<FilesBloc>().add(
       Rename(oldPath: oldPath, newName: newName, controller: controller),
