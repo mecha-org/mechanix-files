@@ -65,6 +65,15 @@ jobs:
           sudo dpkg -i nfpm.deb
           rm nfpm.deb
 
+      - name: Install mechanix-packager
+        env:
+          MECHANIX_PACKAGER_VERSION: v0.0.1
+        run: |
+          mkdir -p "$RUNNER_TEMP/mechanix-packager"
+          curl -fsSL "https://github.com/dhruveshb-mecha/mechanix-packager/archive/refs/tags/${MECHANIX_PACKAGER_VERSION}.tar.gz" \
+            | tar -xz -C "$RUNNER_TEMP/mechanix-packager" --strip-components=1
+          echo "MECHANIX_PACKAGER_DIR=$RUNNER_TEMP/mechanix-packager" >> "$GITHUB_ENV"
+
       - name: Setup | Checkout
         uses: actions/checkout@v4
         with:
@@ -94,18 +103,19 @@ jobs:
       - name: Resolve versions
         id: version
         run: |
-          RPM_JSON=$(python3 packaging/resolve_version.py --format rpm)
-          DEB_JSON=$(python3 packaging/resolve_version.py --format deb)
+          set -euo pipefail
+          RPM_JSON=$(python3 "$MECHANIX_PACKAGER_DIR/resolve_version.py" --format rpm) || { echo "[ERROR] rpm version resolution failed"; exit 1; }
+          DEB_JSON=$(python3 "$MECHANIX_PACKAGER_DIR/resolve_version.py" --format deb) || { echo "[ERROR] deb version resolution failed"; exit 1; }
           echo "rpm_release=$(echo "$RPM_JSON" | jq -r .release)" >> "$GITHUB_OUTPUT"
           echo "deb_release=$(echo "$DEB_JSON" | jq -r .release)" >> "$GITHUB_OUTPUT"
 
       - name: Package RPM
         run: |
-          python3 packaging/package.py ./dist --formats rpm --release "${{ steps.version.outputs.rpm_release }}"
+          python3 "$MECHANIX_PACKAGER_DIR/package.py" ./dist --formats rpm --release "${{ steps.version.outputs.rpm_release }}"
 
       - name: Package DEB
         run: |
-          python3 packaging/package.py ./dist --formats deb --release "${{ steps.version.outputs.deb_release }}"
+          python3 "$MECHANIX_PACKAGER_DIR/package.py" ./dist --formats deb --release "${{ steps.version.outputs.deb_release }}"
 
       - name: Check package sizes
         run: |
