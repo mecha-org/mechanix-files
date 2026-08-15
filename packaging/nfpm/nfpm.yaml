@@ -23,6 +23,10 @@ contents:
     dst: /usr/bin/mechanix_files
     file_info:
       mode: 0755
+  - src: ./org.mechanix.files.desktop
+    dst: /usr/share/applications/org.mechanix.files.desktop
+  - src: ./assets/desktop_icon.png
+    dst: /usr/share/icons/hicolor/48x48/apps/org.mechanix.files.png
 
 scripts:
   postinstall: ./packaging/nfpm/scripts/postinstall.sh
