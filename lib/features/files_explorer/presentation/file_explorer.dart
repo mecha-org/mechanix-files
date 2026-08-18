@@ -15,6 +15,7 @@ import 'package:mechanix_files/features/files_explorer/controllers/file_manager_
 import 'package:mechanix_files/features/files_explorer/data/models/conflict_resolution_strategy.dart';
 import 'package:mechanix_files/features/files_explorer/presentation/bottom_bar_widgets.dart';
 import 'package:mechanix_files/features/files_explorer/presentation/breadcrumbs.dart';
+import 'package:mechanix_files/features/files_explorer/presentation/commons.dart';
 import 'package:mechanix_files/features/files_explorer/presentation/trash_confirmation_dialog.dart';
 import 'package:mechanix_files/features/files_explorer/presentation/list_view.dart';
 import 'package:mechanix_files/features/files_explorer/presentation/paste_handler.dart';
@@ -153,10 +154,10 @@ class FileExplorerPageState extends State<FileExplorerPage> {
       await controller.openDirectory(file.parent);
       if (!mounted) return;
 
-      // 3. Handle file selection after UI stabilizes
+      // 3. Open file
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        // handle file tap here
+        handleFileTap(context, file, initialPath, false, this, controller);
       });
     } else {
       await controller.openDirectory(
@@ -910,7 +911,8 @@ class FileExplorerPageState extends State<FileExplorerPage> {
 
     final newPath = p.join(p.dirname(oldPath), newName);
 
-    final exists = await AppFileSystem.instance.file(newPath).exists() ||
+    final exists =
+        await AppFileSystem.instance.file(newPath).exists() ||
         await AppFileSystem.instance.directory(newPath).exists();
 
     if (exists) {
