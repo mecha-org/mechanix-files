@@ -20,6 +20,7 @@ import 'package:mechanix_files/features/trash/data/repositories/trash_repository
 import 'package:mechanix_files/features/trash/data/repositories/trash_repository_impl.dart';
 import 'package:mechanix_files/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 
@@ -27,7 +28,8 @@ import 'package:mechanix_files/core/utils/app_file_system.dart';
 import 'package:show_fps/show_fps.dart';
 
 void main() {
-  final openPath = _parseOpenPath();
+  WidgetsFlutterBinding.ensureInitialized();
+
   Hive.registerAdapter(AppSettingsAdapter());
   Hive.registerAdapter(RecentFileAdapter());
 
@@ -74,21 +76,85 @@ void main() {
           ),
         ],
 
-        child: FilesApp(openPath: openPath),
+        child: const FilesApp(),
       ),
     ),
   );
 }
 
-class FilesApp extends StatelessWidget {
-  const FilesApp({super.key, required this.openPath});
-  final String openPath;
+class FilesApp extends StatefulWidget {
+  const FilesApp({super.key});
+
+  @override
+  State<FilesApp> createState() => _FilesAppState();
+}
+
+class _FilesAppState extends State<FilesApp> {
+  // Native side (elinux/runner/main.cc) exposes these two channels:
+  // - initial_url_channel: pull — we ask for the cold-start path/URL once.
+  //   Nothing is sent from C++ until we call it, so there's no race with
+  //   engine/plugin startup.
+  // - singleton_channel: push — C++ forwards a path/URL here whenever a
+  //   second launch is redirected to this already-running instance.
+  static const _initialUrlChannel = MethodChannel(
+    'com.mechanix.files/initial_url',
+  );
+  static const _singletonChannel = BasicMessageChannel<dynamic>(
+    'com.mechanix.files/singleton',
+    StandardMessageCodec(),
+  );
+
+  final _navigatorKey = GlobalKey<NavigatorState>();
+
+  String _openPath = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _listenForForwardedPaths();
+    _fetchInitialPath();
+  }
+
+  Future<void> _fetchInitialPath() async {
+    String? path;
+    try {
+      path = await _initialUrlChannel.invokeMethod<String>('getInitialUrl');
+      print("path initial: $path");
+    } on PlatformException catch (e) {
+      debugPrint('getInitialUrl failed: $e');
+    } on MissingPluginException catch (e) {
+      // Expected on platforms other than elinux where this channel
+      // doesn't exist (e.g. running via `flutter run` on a dev host).
+      debugPrint('getInitialUrl channel unavailable: $e');
+    }
+
+    // Fall back to the env-var mechanism for local/dev runs.
+    path ??= _parseOpenPath();
+
+    if (path.isNotEmpty && mounted) {
+      setState(() => _openPath = path!);
+    }
+  }
+
+  void _listenForForwardedPaths() {
+    _singletonChannel.setMessageHandler((dynamic message) async {
+      if (message is String && message.isNotEmpty) {
+        _openPath = message;
+        final segments = pathToSegments(message);
+        // Re-push the file explorer route with the newly forwarded path.
+        _navigatorKey.currentState?.popUntil((route) => route.isFirst);
+        if (mounted) setState(() {});
+      }
+      return null;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final showFps = Platform.environment['SHOW_FPS'] == 'true';
 
     return MaterialApp(
+      navigatorKey: _navigatorKey,
       debugShowCheckedModeBanner: false,
       builder:
           showFps
@@ -101,17 +167,19 @@ class FilesApp extends StatelessWidget {
               }
               : null,
       theme: AppTheme.darkTheme,
-      home: buildFileExplorerPage(context, openPath),
+      home: buildFileExplorerPage(context, _openPath),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       routes: {
-        AppRoutes.files: (context) => buildFileExplorerPage(context, openPath),
+        AppRoutes.files:
+            (context) => buildFileExplorerPage(context, _openPath),
       },
     );
   }
 
   Widget buildFileExplorerPage(BuildContext context, String openPath) {
     return FileHomePage(
+      key: ValueKey(openPath),
       path: openPath.isNotEmpty ? pathToSegments(openPath) : const [],
     );
   }
