@@ -15,6 +15,7 @@ import 'package:mechanix_files/features/files_explorer/controllers/file_manager_
 import 'package:mechanix_files/features/files_explorer/data/models/conflict_resolution_strategy.dart';
 import 'package:mechanix_files/features/files_explorer/presentation/bottom_bar_widgets.dart';
 import 'package:mechanix_files/features/files_explorer/presentation/breadcrumbs.dart';
+import 'package:mechanix_files/features/files_explorer/presentation/commons.dart';
 import 'package:mechanix_files/features/files_explorer/presentation/trash_confirmation_dialog.dart';
 import 'package:mechanix_files/features/files_explorer/presentation/list_view.dart';
 import 'package:mechanix_files/features/files_explorer/presentation/paste_handler.dart';
