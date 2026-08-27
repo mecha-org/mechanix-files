@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Mechanix Files
+Comment=File manager for Mechanix OS
+Exec=mechanix_files -s 1
+Icon=org.mechanix.files
+Terminal=false
+Categories=Utility;FileManager;
+StartupNotify=true
+StartupWMClass=org.mechanix.files
