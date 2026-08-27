@@ -10,13 +10,25 @@ description: Mechanix Files application
 homepage: https://github.com/mecha-org/mechanix-files.git
 license: BSD
 
+overrides:
+  rpm:
+    depends:
+      - mechanix-flutter-engine = 3.47.0
+  deb:
+    depends:
+      - "mechanix-flutter-engine (= 3.47.0)"
+
 contents:
   - src: ./stage/bundle/mechanix_files
     dst: /usr/share/mechanix/mechanix-files/mechanix_files
     file_info:
       mode: 0755
-  - src: ./stage/bundle/lib
-    dst: /usr/share/mechanix/mechanix-files/lib
+  - src: ./stage/bundle/lib/libapp.so
+    dst: /usr/share/mechanix/mechanix-files/lib/libapp.so
+  - src: ./stage/bundle/lib/libaudioplayers_elinux_plugin.so
+    dst: /usr/share/mechanix/mechanix-files/lib/libaudioplayers_elinux_plugin.so
+  - src: ./stage/bundle/lib/libvideo_player_elinux_plugin.so
+    dst: /usr/share/mechanix/mechanix-files/lib/libvideo_player_elinux_plugin.so
   - src: ./stage/bundle/data
     dst: /usr/share/mechanix/mechanix-files/data
   - src: ./packaging/nfpm/scripts/launcher.sh
