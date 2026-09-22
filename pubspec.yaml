@@ -67,6 +67,9 @@ dependencies:
   docx_viewer: ^1.0.1
   show_fps: ^1.1.0
 
+  mechanix_common:
+    path: ../mechanix_common
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

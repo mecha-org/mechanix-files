@@ -8,10 +8,13 @@
 
 #include <audioplayers_elinux/audioplayers_elinux_plugin.h>
 #include <video_player_elinux/video_player_elinux_plugin.h>
+#include <mechanix_common/mechanix_common_plugin.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
   AudioplayersElinuxPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("AudioplayersElinuxPlugin"));
   VideoPlayerElinuxPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("VideoPlayerElinuxPlugin"));
+  MechanixCommonPluginRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("MechanixCommonPlugin"));
 }

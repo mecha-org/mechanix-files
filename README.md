@@ -29,6 +29,11 @@ Files App lets you organize and manage your files and folders in your Mecha Come
     $ flutter-elinux run
     ```
 
+4. Trigger from busctl
+    ```
+    busctl --user call org.mechanix.files /org/mechanix/files   org.freedesktop.Application Open ass 1 "/home/spider/Documents/test.txt" ""
+    ```    
+
 ## 🔑 Key Features
 
 - **File Browsing**: Easily browse through files and folders on your device.
