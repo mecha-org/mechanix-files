@@ -10,6 +10,10 @@
 
 #include <memory>
 
+namespace mechanix {
+class DBusInstanceManager;
+}
+
 class FlutterWindow {
  public:
   explicit FlutterWindow(
@@ -23,7 +27,7 @@ class FlutterWindow {
 
   bool OnCreate();
   void OnDestroy();
-  void Run();
+  void Run(mechanix::DBusInstanceManager* manager = nullptr);
   flutter::FlutterEngine* GetEngine() {
     return flutter_view_controller_ ? flutter_view_controller_->engine()
                                     : nullptr;

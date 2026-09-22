@@ -14,9 +14,14 @@
 #include <string>
 #include <vector>
 
+// #include <poll.h>
+// #include <algorithm>
+// #include <chrono>
+
 #include "flutter_embedder_options.h"
 #include "flutter_window.h"
-#include "instance_manager.h"
+#include "mechanix_common/dbus_instance_manager.h"
+#include "mechanix_common/mechanix_common_plugin.h"
 
 namespace {
 // Short flags that consume the *next* argv token as a value (e.g. "-s 1"),
@@ -77,7 +82,12 @@ int main(int argc, char** argv) {
       dart_entrypoint_arguments.empty() ? "" : dart_entrypoint_arguments.front();
 
   // If another instance is already running, hand the URL off to it and exit.
-  if (!TryBecomePrimaryOrForward(incoming_url)) {
+  auto* common = mechanix::MechanixCommon::GetInstance();
+  std::vector<std::string> incoming_files;
+  if (!incoming_url.empty()) {
+    incoming_files.push_back(incoming_url);
+  }
+  if (!common->RegisterSingletonCheck("files", incoming_files)) {
     return 0;
   }
 
@@ -102,43 +112,10 @@ int main(int argc, char** argv) {
     return 0;
   }
 
-  auto messenger = window.GetEngine()->messenger();
-
-  // --- Pull-based: Dart asks for the initial URL once its handler is
-  // ready (in initState()). No race — nothing is sent until Dart
-  // explicitly requests it, so we can't lose the cold-start URL.
-  auto initial_url_channel =
-      std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
-          messenger, "com.mechanix.files/initial_url",
-          &flutter::StandardMethodCodec::GetInstance());
-
-  initial_url_channel->SetMethodCallHandler(
-      [incoming_url](
-          const flutter::MethodCall<flutter::EncodableValue>& call,
-          std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
-        if (call.method_name() == "getInitialUrl") {
-          if (incoming_url.empty()) {
-            result->Success(flutter::EncodableValue());  // null
-          } else {
-            result->Success(flutter::EncodableValue(incoming_url));
-          }
-        } else {
-          result->NotImplemented();
-        }
-      });
-
-  // --- Push-based: forwards a URL to an ALREADY-running instance.
-  // Dart is guaranteed to be listening by the time a second launch
-  // happens, so there's no race on this path.
-  flutter::BasicMessageChannel<flutter::EncodableValue> singleton_channel(
-      messenger, "com.mechanix.files/singleton",
-      &flutter::StandardMessageCodec::GetInstance());
-
-  StartInstanceListener([&singleton_channel](std::string url) {
-    singleton_channel.Send(flutter::EncodableValue(url));
-  });
-
-  window.Run();
+  // Register the singleton plugin
+  common->RegisterSingleton("files", window.GetEngine()->GetRegistrarForPlugin("MechanixCommonPlugin"));
+  window.Run(common != nullptr ? common->GetInstanceManager() : nullptr);
   window.OnDestroy();
   return 0;
 }
+

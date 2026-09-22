@@ -23,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
+import 'package:mechanix_common/mechanix_common.dart';
 
 import 'package:mechanix_files/core/utils/app_file_system.dart';
 import 'package:show_fps/show_fps.dart';
@@ -99,10 +100,6 @@ class _FilesAppState extends State<FilesApp> {
   static const _initialUrlChannel = MethodChannel(
     'com.mechanix.files/initial_url',
   );
-  static const _singletonChannel = BasicMessageChannel<dynamic>(
-    'com.mechanix.files/singleton',
-    StandardMessageCodec(),
-  );
 
   final _navigatorKey = GlobalKey<NavigatorState>();
 
@@ -137,15 +134,14 @@ class _FilesAppState extends State<FilesApp> {
   }
 
   void _listenForForwardedPaths() {
-    _singletonChannel.setMessageHandler((dynamic message) async {
-      if (message is String && message.isNotEmpty) {
+    MechanixApp.registerSingleton('files', (String? message) {
+      if (message != null && message.isNotEmpty) {
         _openPath = message;
         final segments = pathToSegments(message);
         // Re-push the file explorer route with the newly forwarded path.
         _navigatorKey.currentState?.popUntil((route) => route.isFirst);
         if (mounted) setState(() {});
       }
-      return null;
     });
   }
 
