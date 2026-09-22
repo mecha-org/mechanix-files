@@ -10,6 +10,14 @@ description: Mechanix Files application
 homepage: https://github.com/mecha-org/mechanix-files.git
 license: BSD
 
+overrides:
+  rpm:
+    depends:
+      - mechanix-flutter-engine = 3.47.1
+  deb:
+    depends:
+      - "mechanix-flutter-engine (= 3.47.1)"
+
 contents:
   - src: ./stage/bundle/mechanix_files
     dst: /usr/share/mechanix/mechanix-files/mechanix_files
