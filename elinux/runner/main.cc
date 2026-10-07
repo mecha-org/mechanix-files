@@ -2,32 +2,98 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#include <flutter/basic_message_channel.h>
 #include <flutter/dart_project.h>
 #include <flutter/flutter_view_controller.h>
+#include <flutter/method_channel.h>
+#include <flutter/standard_message_codec.h>
+#include <flutter/standard_method_codec.h>
 
 #include <iostream>
 #include <memory>
 #include <string>
+#include <vector>
+
+// #include <poll.h>
+// #include <algorithm>
+// #include <chrono>
 
 #include "flutter_embedder_options.h"
 #include "flutter_window.h"
+#include "mechanix_common/dbus_instance_manager.h"
+#include "mechanix_common/mechanix_common_plugin.h"
+
+namespace {
+// Short flags that consume the *next* argv token as a value (e.g. "-s 1"),
+// based on your --help output. Verify against flutter_embedder_options.h.
+bool ShortFlagTakesValue(char c) {
+  switch (c) {
+    case 'b': case 'r': case 'x': case 's':
+    case 't': case 'a': case 'w': case 'h':
+      return true;
+    default:
+      return false;
+  }
+}
+}  // namespace
 
 int main(int argc, char** argv) {
+  // --------------------------------------------------------------------
+  // Split argv into (a) engine/window flags consumed by
+  // FlutterEmbedderOptions, and (b) everything else (e.g. the deep-link
+  // path/URL passed by xdg-open or your launcher), which we now deliver
+  // to Dart over a method channel instead of as entrypoint args.
+  // --------------------------------------------------------------------
+  std::vector<std::string> engine_arg_storage;
+  std::vector<std::string> dart_entrypoint_arguments;
+  engine_arg_storage.push_back(argv[0]);
+
+  for (int i = 1; i < argc; ++i) {
+    std::string arg = argv[i];
+    if (arg.rfind("--", 0) == 0) {
+      engine_arg_storage.push_back(arg);
+    } else if (arg.size() >= 2 && arg[0] == '-' && arg != "-") {
+      engine_arg_storage.push_back(arg);
+      if (ShortFlagTakesValue(arg[1]) && i + 1 < argc) {
+        engine_arg_storage.push_back(argv[++i]);  // consume its value too
+      }
+    } else {
+      // Anything that isn't a flag — e.g. the URL from xdg-open — goes to Dart.
+      dart_entrypoint_arguments.push_back(arg);
+    }
+  }
+
+  std::vector<char*> engine_argv;
+  for (auto& s : engine_arg_storage) {
+    engine_argv.push_back(const_cast<char*>(s.c_str()));
+  }
+
   FlutterEmbedderOptions options;
-  if (!options.Parse(argc, argv)) {
+  if (!options.Parse(static_cast<int>(engine_argv.size()), engine_argv.data())) {
     return 0;
   }
 
-  // Creates the Flutter project.
   const auto bundle_path = options.BundlePath();
   const std::wstring fl_path(bundle_path.begin(), bundle_path.end());
   flutter::DartProject project(fl_path);
-  auto command_line_arguments = std::vector<std::string>();
-  project.set_dart_entrypoint_arguments(std::move(command_line_arguments));
+
+  // The URL/path this launch was invoked with (empty if none).
+  std::string incoming_url =
+      dart_entrypoint_arguments.empty() ? "" : dart_entrypoint_arguments.front();
+
+  // If another instance is already running, hand the URL off to it and exit.
+  auto* common = mechanix::MechanixCommon::GetInstance();
+  std::vector<std::string> incoming_files;
+  if (!incoming_url.empty()) {
+    incoming_files.push_back(incoming_url);
+  }
+  if (!common->RegisterSingletonCheck("files", incoming_files)) {
+    return 0;
+  }
 
   flutter::FlutterViewController::ViewProperties view_properties = {};
-  view_properties.width = 540;
-  view_properties.height = 620;
+  view_properties.width = options.WindowWidth();
+  view_properties.height = options.WindowHeight();
   view_properties.view_mode = options.WindowViewMode();
   view_properties.view_rotation = options.WindowRotation();
   view_properties.title = options.WindowTitle();
@@ -41,13 +107,15 @@ int main(int argc, char** argv) {
   view_properties.scale_factor = options.ScaleFactor();
   view_properties.enable_vsync = options.EnableVsync();
 
-  // The Flutter instance hosted by this window.
   FlutterWindow window(view_properties, project);
   if (!window.OnCreate()) {
     return 0;
   }
-  window.Run();
-  window.OnDestroy();
 
+  // Register the singleton plugin
+  common->RegisterSingleton("files", window.GetEngine()->GetRegistrarForPlugin("MechanixCommonPlugin"));
+  window.Run(common != nullptr ? common->GetInstanceManager() : nullptr);
+  window.OnDestroy();
   return 0;
 }
+
